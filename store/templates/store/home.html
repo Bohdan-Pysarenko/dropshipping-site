@@ -1,0 +1,131 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<style>
+		#header {
+    		background-image: url("/static/images/home-background.png");
+    		height: 85vh;
+    		width: 100%;
+	    	background-size: cover;
+    		background-position: top 50% right 0;
+    		padding: 0px 200px;
+  		}
+  	</style>
+{% endblock css %}
+{% block header %}
+<div id="hero">
+    <h4 id="hero-subtitle">STYLISH ESSENTIALS FOR THE MODERN HOME</h4>
+    <h1 id="hero-title">ELEVATE YOUR EVERYDAY</h1>
+    <div id="hero-buttons">
+        <button class="hero-button"><a href="">SHOP BESTSELLERS</a></button>
+        <button class="hero-button"><a href="">SHOP NEW ARRIVALS</a></button>
+    </div>
+</div>
+{% endblock header %}
+{% block content %}
+
+<section id="departments" class="section-p1">
+	<h2>SHOP BY DEPARTMENT</h2>
+	<div id="department-container">
+		<div class="department-box">
+			<img src="{% static 'images/dep1.jpg' %}">
+			<span><a href="{% url 'category' slug='planters' %}">PLANTERS</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep2.jpg' %}">
+			<span><a href="#">VASES & PROPAGATION</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep1.jpg' %}">
+			<span><a href="#">PLANT STANDS & HANGERS</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep3.jpg' %}">
+			<span><a href="#">PLANT CARE</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep4.jpeg' %}">
+			<span><a href="#">HOME DECOR</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep5.jpg' %}">
+			<span><a href="#">KITCHEN & DINING</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep6.jpg' %}">
+			<span><a href="#">BATHROOM</a></span>
+		</div>
+
+		<div class="department-box">
+			<img src="{% static 'images/dep7.jpg' %}">
+			<span><a href="#">NEW ARRIVALS</a></span>
+		</div>
+	</div>
+</section>
+
+<section id="banners" class="section-p1">
+	<div class="small-banner">
+		<div class="small-banner-box">
+			<h4>LIMITED TIME</h4>
+			<h2>SUMMER SALE</h2>
+			<h5>Up to 50% OFF everything</h5>
+			<button><a href="#">SHOP DEALS</a></button>
+		</div>
+	</div>
+
+	<div class="small-banner small-banner2">
+		<div class="small-banner-box">
+			<h4>EXTRA SAVING</h4>
+			<h2>GET 10% OFF</h2>
+			<h5>Use code Bohdan2023</h5>
+			<button><a href="#">APPLY DISCOUNT</a></button>
+		</div>
+	</div>
+</section>
+
+<section id="product1" class="section-p1">
+	<h2>OUR FAVORITE PLANTERS</h2>
+	<div class="product-container">
+		{% for planter in planters %}
+			{% if forloop.counter <= 8 %}
+				<div class="product-box">
+					<a href="/{{planter.slug}}"><img src="{{ planter.imageURL }}"></a>
+					{% if planter.available %}
+						<span class="onsale">Sale</span>
+					{% else %}
+						<span class="soldout">Sold</span>
+					{% endif %}
+					<h4>{{ planter.name }}</h4>
+					<div class="rating">
+						<div class="star">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+						</div>
+						<p class="review-number">126</p>  
+						<p> reviews</p>
+					</div>
+					<div class="price-box">
+						<span class="crossed-price">${{ planter.crossed_out_price }}</span>
+						<span class="price">${{ planter.price }}</span>
+						<span class="save">Save {{ planter.calc_save }}%</span>
+					</div>
+				</div>
+			{% endif  %}
+		{% endfor %}
+	
+	</div>
+	<div class="view-all">
+		<button><a href="#">VIEW ALL</a></button>
+	</div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<section id="product1" class="section-p1">
+		<h2>OUR FAVORITE PLANTERS</h2>
+		<div class="product-container">
+			{% for product in products %}
+				<div class="product-box">
+					<a href="/{{product.slug}}"><img src="{{ product.imageURL }}"></a>
+					{% if product.available %}
+						<span class="onsale">Sale</span>
+					{% else %}
+						<span class="soldout">Sold</span>
+					{% endif %}
+					<h4>{{ product.name }}</h4>
+					<div class="rating">
+						<div class="star">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+						</div>
+						<p class="review-number">126</p>  
+						<p> reviews</p>
+					</div>
+					<div class="price-box">
+						<span class="crossed-price">${{ product.crossed_out_price }}</span>
+						<span class="price">${{ product.price }}</span>
+						<span class="save">Save {{ product.calc_save }}%</span>
+					</div>
+				</div>
+			{% endfor %}
+		
+		</div>
+		<div class="view-all">
+			<button><a href="#">VIEW ALL</a></button>
+		</div>
+	</section>
+{% endblock content %}

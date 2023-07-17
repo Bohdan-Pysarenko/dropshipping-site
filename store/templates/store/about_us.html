@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<section class="section-p1">
+		<div class="about-container">
+			<h2>ABOUT US</h2>
+			<p><strong>Welcome to Sage & Sill!</strong> - We're a small business in Spokane, Washington, and we have big dreams. Our passion for plants and home essentials drives us to provide our customers with products that are guaranteed to delight! We thoroughly check the quality of our goods, working only with the best merchants and suppliers so that you receive only the best quality products.</p>
+
+			<p><strong>Luxury for everyone</strong> - We believe shopping is a right, not a privilege, so we strive to offer the best products at the most affordable prices and ship them to you anywhere in the world.</p>
+
+			<p><strong>Always here to help</strong> - Your experience with us doesn't end when your order arrives. We want to earn your trust, over and over again. We insist on exceptional customer service, which is why our friendly customer care team is here to help 7 days a week.</p>
+			
+			<p><strong>We're not happy until you're happy</strong> - Our customers' best interest is always our top priority, so we hope you love our products as much as we love making them available to you!</p>
+		</div>
+	</section>
+{% endblock content %}

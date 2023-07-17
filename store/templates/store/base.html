@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+{% block css %}
+
+{% endblock css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Polyshop Homepage</title>
+<style>
+  
+</style>
+</head>
+<body>
+  <div class="announcement">
+    <p><b>30-DAY RETURNS</b> Money Back Guarantee</p>
+  </div>
+  <section id="header">
+
+    <div id="navbar-container">
+      <ul id="navbar">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="#">Departments</a></li>
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'shipping_policy' %}">Shipping</a></li>
+        <li><a href="{% url 'refund_policy' %}">Refunds</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Help</a></li>
+      </ul>
+
+      <ul id="navbar-right">
+        <li><p>Icon</p></li>
+        <li><p>Icon</p></li>
+        <li><p>Icon</p></li>
+        <li><p>Currency</p></li>
+      </ul>
+    </div>
+
+    <div id="categories">
+      <a href="{% url 'home' %}"><img class="logo" src="{% static 'images/logo.png' %}"></a>
+      <ul id="navbar-bottom">
+          <li><a href="#">New</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+          <li><a href="#">Cat_item</a></li>
+      </ul>
+
+      <ul id="navbar-login">
+        <li><a href="">Log in</a></li>
+        <li><a href="">Cart</a></li>
+      </ul>
+    </div>
+    {% block header %}
+
+    {% endblock header %}
+  </section>
+  {% block content %}
+
+  {% endblock content %}
+  <footer>
+    <div class="col">
+      <h4>OUR COMPANY</h4>
+      <a href="{% url 'about' %}">About Us</a>
+      <a href="#">See all Collections</a>
+      <a href="#">Contact Us</a>
+    </div>
+
+    <div class="col">
+      <h4>MY ORDER</h4>
+      <a href="#">Track Order</a>
+      <a href="#">Lost, Damaged</a>
+      <a href="#">Return or Exchange</a>
+      <a href="{% url 'shipping_policy' %}">Shipping Times</a>
+      <a href="#">FAQ</a>
+    </div>
+
+    <div class="col">
+      <h4>POLICIES</h4>
+      <a href="{% url 'shipping_policy' %}">Shipping Policy</a>
+      <a href="{% url 'refund_policy' %}">Refund Policy</a>
+      <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+      <a href="{% url 'terms_of_service' %}">Terms of Service</a>
+    </div>
+
+    <div class="col">
+      <h4>GET 10% OFF</h4>
+      <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+      <div class="form">
+        <input type="text" placeholder="Your email address">
+        <button class="normal">Sign Up</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://kit.fontawesome.com/d990a4246b.js" crossorigin="anonymous"></script>
+  <script src="{% static 'main.js' %}"></script>
+    
+</body>
+</html>
+
+

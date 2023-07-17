@@ -1,0 +1,33 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<section class="section-p1">
+		<div class="policy-container">
+			<h2>REFUND POLICY</h2>
+			<h4>Returns</h4>
+			<p>We have a 30-day return policy, which means you have 30 days after receiving your item to request a return.</p>
+			<p>To be eligible for a return, your item must be in the same condition that you received it, unworn or unused, with tags, and in its original packaging. You’ll also need the receipt or proof of purchase.</p>
+			<p class="last">To start a return, request one via our Returns and Exchanges Portal. If your return is accepted, we’ll send you instructions on how and where to send your package. Items sent back to us without first requesting a return will not be accepted.</p>
+
+			<h4>Refunds</h4>
+			<p>We will notify you once we’ve received and inspected your return, and let you know if the refund was approved or not. If approved, you’ll be automatically refunded on your original payment method within 10 business days. Please remember it can take some time for your bank or credit card company to process and post the refund too.</p>
+			<p class="last">If more than 15 business days have passed since we’ve approved your return, please contact us at <strong>info@sageandsill.com.</strong></p>
+
+		</div>
+	</section>
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<section class="section-p1">
+		<div class="policy-container">
+			<h2>SHIPPING POLICY</h2>
+			<h4>Processing and Handling</h4>
+			<p class="last">We do our best to process most orders within 1-2 days, but all orders are processed within 1 to 7 business days (excluding weekends and holidays) after receiving your order confirmation email. You will receive another notification when your order has shipped. </p>
+
+			<h4>Shipping Rates and Estimates</h4>
+			<p>We offer free standard international shipping on all orders from our suppliers to the following countries and regions: the United States, Canada, the European Union, the United Kingdom, Australia, New Zealand, and others worldwide. Shipping typically takes between 2 and 4 weeks, though import and customs delays to certain destinations can extend shipping times beyond this window.</p>
+			<p class="last">Your order may be subject to import duties and taxes (including VAT), which are incurred once a shipment reaches your destination country. Sage & Sill is not responsible for these charges if they are applied and are your responsibility as the customer.</p>
+
+			<h4>How do I check the status of my order?</h4>
+			<p>You can check the status of your order at any time on our Order Tracking page.</p>
+			<p>When your order has shipped, you will receive an email notification from us which will include a tracking number you can use to check its status. Please allow 48 hours for the tracking information to become available.</p>
+			<p class="last">If you haven’t received your order within 30 days of receiving your shipping confirmation email, please contact us at info@sageandsill.com with your name and order number, and we will look into it for you.</p>
+
+			<h4>Refunds, Returns, and Exchanges</h4>
+			<p><strong>View our refund policy</strong></p>
+			<p class="last">We accept returns up to 30 days after delivery, if the item is unused and in its original condition, and we will refund the full order amount minus the shipping costs for the return.</p>
+		</div>
+	</section>
+{% endblock content %}

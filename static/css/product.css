@@ -1,0 +1,178 @@
+#container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 30px;
+}
+
+#container .small-img-group {
+  text-align: center;
+  position: sticky;
+  top: 0;
+}
+
+#container .small-img-group img {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 15px;
+  position: sticky;
+  top: 40px;
+}
+
+#container .main-image img {
+  width: 600px;
+  height: 600px;
+  position: sticky;
+  top: 40px;
+}
+
+.main-image {
+  height: 100%;
+}
+
+.image_container {
+  position: relative;
+  width: 600px;
+}
+
+#container .product-details {
+  padding-left: 60px;
+  max-width: 40%;
+}
+
+#container .product-details h2 {
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+#container .rating {
+  display: flex;
+  justify-content: start;
+  padding: 0 0 20px 0;
+}
+
+#container .star {
+  text-align: start;
+}
+
+#container .star i {
+  font-size: 15px;
+  color: rgb(243, 181, 25);
+}
+
+#container .review-number {
+  font-size: 16px;
+  padding: 2px 8px 0px 8px;
+}
+
+#container .rating span {
+  font-size: 18px;
+}
+
+#container .price-box {
+  padding-top: 5px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+#container .crossed-price {
+  font-size: 18px;
+  text-decoration: line-through;
+}
+
+#container .price {
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 10px;
+  color: #b12704;
+}
+
+#container .save {
+  color: #b63514;
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+#container .prospect {
+  margin-top: 25px;
+}
+
+#container .prospect p {
+  font-size: 15px;
+  padding-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+#container .prospect h4{
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+#container .prospect input {
+  margin-top: 8px;
+}
+
+#container .add-to-cart {
+  margin-top: 25px;
+  
+}
+
+#container .add-to-cart button {
+  padding: 14px 20px;
+  border-radius: 25px;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+
+#container .add-to-cart button:hover {
+  cursor: pointer;
+}
+
+#container .add-to-cart a {
+  text-decoration: none;
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.description > p {
+  margin: 16px 0;
+  font-size: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
