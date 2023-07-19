@@ -18,19 +18,43 @@
 {% block content %}
 	<section class="section-p1">
 		<div id="container">
-  			<div class="small-img-group">
-  				{% for image in images %}
-	  				<div class="small-img-row">
-	  					<img src="{{ image.imageURL }}">
-	  				</div>
-  				{% endfor %}
-  			</div>
-  			<div class="image_container">
-  				<div id="product_image" class="main-image">
-    				<img src="{{ product.imageURL }}">
-    			</div>
-  			</div>
+			<div class="sticky_container">
+				<div class="sticky">
+					<div class="small-img-group">
+						{% for image in images %}
+							<div class="small-img-row">
+								<img src="{{ image.imageURL }}">
+							</div>
+						{% endfor %}
+					</div>
+					<div class="image_container">
+						<div id="product_image" class="main-image">
+						  <img src="{{ product.imageURL }}">
+					  </div>
+					</div>
+				</div>
+			</div>
   			
+
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+			  // Знаходимо всі малі зображення
+			  const smallImages = document.querySelectorAll('.small-img-group img');
+			  // Знаходимо основне зображення
+			  const mainImage = document.querySelector('#product_image img');
+			
+			  // Перебираємо всі малі зображення
+			  smallImages.forEach(function(smallImg) {
+				// Додаємо обробник події для кожного зображення
+				smallImg.addEventListener('click', function() {
+				  // Отримуємо посилання на нове зображення з атрибута src клікнутого зображення
+				  const newImageSrc = this.getAttribute('src');
+				  // Змінюємо src основного зображення на нове зображення
+				  mainImage.setAttribute('src', newImageSrc);
+				});
+			  });
+			});
+			</script>
 
   			<div class="product-details">
     			<h2>{{ product.name }}</h2>
@@ -120,4 +144,3 @@
 {% endblock content %}
 
 
-<!-- src="{{ product.imageURL }}" -->

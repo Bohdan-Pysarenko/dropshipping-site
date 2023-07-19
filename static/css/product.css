@@ -21,7 +21,6 @@
 #container .main-image img {
   width: 600px;
   height: 600px;
-  position: sticky;
   top: 40px;
 }
 
@@ -32,6 +31,17 @@
 .image_container {
   position: relative;
   width: 600px;
+}
+
+.sticky {
+  gap: 24px;
+  top: 24px;
+  position: sticky;
+  display: flex;
+}
+
+.sticky_container {
+
 }
 
 #container .product-details {
