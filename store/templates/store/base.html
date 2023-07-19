@@ -23,12 +23,11 @@
     <div id="navbar-container">
       <ul id="navbar">
         <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="#">Departments</a></li>
+        <li><a href="{% url 'collection:collections' %}">Departments</a></li>
         <li><a href="{% url 'about' %}">About us</a></li>
         <li><a href="{% url 'shipping_policy' %}">Shipping</a></li>
         <li><a href="{% url 'refund_policy' %}">Refunds</a></li>
         <li><a href="#">Track Order</a></li>
-        <li><a href="#">Help</a></li>
       </ul>
 
       <ul id="navbar-right">
@@ -42,15 +41,15 @@
     <div id="categories">
       <a href="{% url 'home' %}"><img class="logo" src="{% static 'images/logo.png' %}"></a>
       <ul id="navbar-bottom">
-          <li><a href="#">New</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
-          <li><a href="#">Cat_item</a></li>
+          <li><a href="{% url 'collection:category' slug='new-arrivals' %}">New Arrivals</a></li>
+          <li><a href="{% url 'collection:category' slug='kitchen' %}">Kitchen</a></li>
+          <li><a href="{% url 'collection:category' slug='garden' %}">Garden</a></li>
+          <li><a href="{% url 'collection:category' slug='home-decor' %}">Home Decor</a></li>
+          <li><a href="{% url 'collection:category' slug='bathroom' %}">Bathroom</a></li>
+          <li><a href="{% url 'collection:category' slug='pets' %}">Pets</a></li>
+          <li><a href="{% url 'collection:category' slug='car' %}">Car</a></li>
+          <li><a href="{% url 'collection:category' slug='bestsellers' %}">Bestsellers</a></li>
+          <li><a href="{% url 'collection:category' slug='other' %}">Others</a></li>
       </ul>
 
       <ul id="navbar-login">
@@ -69,15 +68,15 @@
     <div class="col">
       <h4>OUR COMPANY</h4>
       <a href="{% url 'about' %}">About Us</a>
-      <a href="#">See all Collections</a>
+      <a href="{% url 'collection:collections' %}">See all Collections</a>
       <a href="#">Contact Us</a>
     </div>
 
     <div class="col">
       <h4>MY ORDER</h4>
       <a href="#">Track Order</a>
-      <a href="#">Lost, Damaged</a>
-      <a href="#">Return or Exchange</a>
+      <!-- <a href="#">Lost, Damaged</a> -->
+      <!-- <a href="#">Return or Exchange</a> -->
       <a href="{% url 'shipping_policy' %}">Shipping Times</a>
       <a href="#">FAQ</a>
     </div>

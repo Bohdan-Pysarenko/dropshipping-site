@@ -17,8 +17,8 @@
     <h4 id="hero-subtitle">STYLISH ESSENTIALS FOR THE MODERN HOME</h4>
     <h1 id="hero-title">ELEVATE YOUR EVERYDAY</h1>
     <div id="hero-buttons">
-        <button class="hero-button"><a href="">SHOP BESTSELLERS</a></button>
-        <button class="hero-button"><a href="">SHOP NEW ARRIVALS</a></button>
+        <button class="hero-button"><a href="{% url 'collection:category' slug='bestsellers' %}">SHOP BESTSELLERS</a></button>
+        <button class="hero-button"><a href="{% url 'collection:category' slug='new-arrivals' %}">SHOP NEW ARRIVALS</a></button>
     </div>
 </div>
 {% endblock header %}
@@ -29,7 +29,7 @@
 	<div id="department-container">
 		<div class="department-box">
 			<img src="{% static 'images/dep1.jpg' %}">
-			<span><a href="{% url 'category' slug='planters' %}">PLANTERS</a></span>
+			<span><a href="{% url 'collection:category' slug='planters' %}">PLANTERS</a></span>
 		</div>
 
 		<div class="department-box">
