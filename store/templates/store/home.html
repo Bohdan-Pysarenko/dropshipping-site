@@ -88,44 +88,45 @@
 		</div>
 	</div>
 </section>
-
-<section id="product1" class="section-p1">
-	<h2>OUR FAVORITE PLANTERS</h2>
-	<div class="product-container">
-		{% for planter in planters %}
-			{% if forloop.counter <= 8 %}
-				<div class="product-box">
-					<a href="/{{planter.slug}}"><img src="{{ planter.imageURL }}"></a>
-					{% if planter.available %}
-						<span class="onsale">Sale</span>
-					{% else %}
-						<span class="soldout">Sold</span>
-					{% endif %}
-					<h4>{{ planter.name }}</h4>
-					<div class="rating">
-						<div class="star">
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
-							<i class="fas fa-star"></i>
+{% for category_name, product_list in products_list.items %}
+	<section id="product1" class="section-p1">
+		<h2>{{ category_name|upper }}</h2>
+		<div class="product-container">
+			{% for product in product_list %}
+				{% if forloop.counter <= 8 %}
+					<div class="product-box">
+						<a href="/{{product.slug}}"><img src="{{ product.imageURL }}"></a>
+						{% if product.available %}
+							<span class="onsale">Sale</span>
+						{% else %}
+							<span class="soldout">Sold</span>
+						{% endif %}
+						<h4>{{ product.name }}</h4>
+						<div class="rating">
+							<div class="star">
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+								<i class="fas fa-star"></i>
+							</div>
+							<p class="review-number">126</p>  
+							<p> reviews</p>
 						</div>
-						<p class="review-number">126</p>  
-						<p> reviews</p>
+						<div class="price-box">
+							<span class="crossed-price">${{ product.crossed_out_price }}</span>
+							<span class="price">${{ product.price }}</span>
+							<span class="save">Save {{ product.calc_save }}%</span>
+						</div>
 					</div>
-					<div class="price-box">
-						<span class="crossed-price">${{ planter.crossed_out_price }}</span>
-						<span class="price">${{ planter.price }}</span>
-						<span class="save">Save {{ planter.calc_save }}%</span>
-					</div>
-				</div>
-			{% endif  %}
-		{% endfor %}
-	
-	</div>
-	<div class="view-all">
-		<button><a href="#">VIEW ALL</a></button>
-	</div>
-</section>
+				{% endif  %}
+			{% endfor %}
+		
+		</div>
+		<div class="view-all">
+			<button><a href="{% url 'collection:category' slug=category_name|lower %}">VIEW ALL</a></button>
+		</div>
+	</section>
+{% endfor %}
 
 {% endblock content %}
