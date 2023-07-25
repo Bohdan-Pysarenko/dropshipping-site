@@ -7,3 +7,6 @@ def category_render(request, slug):
 	products = category.product_set.all()
 	context = {'products': products}
 	return render(request, 'collection/category.html', context)
+
+def collections_render(request):
+	return render(request, 'collection/collections.html')

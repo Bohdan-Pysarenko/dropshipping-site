@@ -5,8 +5,16 @@ from .models import *
 def home(request):
 	#planters = Product.objects.all().filter(category=1)
 	planters = get_list_or_404(Product, category=1)
+	categories = Category.objects.all()
+	products_list = {}
 
-	context = {'planters': planters}
+	for x in range(len(categories)):
+		category = categories[x]
+		products = category.product_set.all()
+		products_list[str(category)] = products
+
+
+	context = {'planters': planters, 'products_list': products_list}
 	return render(request, 'store/home.html', context)
 
 def product_render(request, slug):
