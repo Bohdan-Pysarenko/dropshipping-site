@@ -21,13 +21,14 @@
   			<div class="small-img-group">
   				{% for image in images %}
 	  				<div class="small-img-row">
-	  					<img src="{{ image.imageURL }}">
+	  					<img src="{{ image.imageURL }}" data-index="{{ forloop.counter0 }}" onclick="changeMainImage(event)">
 	  				</div>
   				{% endfor %}
   			</div>
   			<div class="image_container">
   				<div id="product_image" class="main-image">
-    				<img src="{{ product.imageURL }}">
+    				<!-- <img src="{{ product.imageURL }}"> -->
+    				<img src="{{ images.0.imageURL }}" id="mainImage">
     			</div>
   			</div>
   			
@@ -42,7 +43,7 @@
 						<i class="fas fa-star"></i>
 						<i class="fas fa-star"></i>
 					</div>
-					<p class="review-number">126</p>  
+					<p class="review-number">{{ reviews.count }}</p>  
 					<span> reviews</span>
 				</div>
 				<span>Sold Out</span>
@@ -75,39 +76,19 @@
 						{% endif %}
 					{% endfor %}
 
-					{% for variant in variants %}
-						{% if variant.material %}
-							{% if forloop.counter == 1 %}
-								<h4>MATERIAL</h4>
-							{% endif %}
-							<button>{{ variant.material }}</button>
-						{% endif %}
-					{% endfor %}
-
-					{% for variant in variants %}
-						{% if variant.power %}
-							{% if forloop.counter == 1 %}
-								<h4>POWER</h4>
-							{% endif %}
-							<button>{{ variant.power }}</button>
-						{% endif %}
-					{% endfor %}
-
-					{% for variant in variants %}
-						{% if variant.number_in_group %}
-							{% if forloop.counter == 1 %}
-								<h4>NUMBER</h4>
-							{% endif %}
-							<button>{{ variant.number_in_group }}</button>
-						{% endif %}
-					{% endfor %}
-
-					<h4>QUANTITY</h4>
+					<!-- <h4>QUANTITY</h4>
 					<input type="number" value="1">
 
 					<div class="add-to-cart">
 						<button><a href="#">ADD TO CART</a></button>
-					</div>
+					</div> -->
+					{% if product.available %}
+						<form method="POST" action="{% url 'product' product.slug %}">
+							{% csrf_token %}
+							<input min="1" value="1" type="number" name="quantity">
+							<input class="add-to-cart-button" type="submit"value="Add to Cart">
+						</form>
+					{% endif %}
 				</div>
 				<div class="description">
 					<p>{{ product.description|safe }}</p>
@@ -116,8 +97,37 @@
 		</div>
 
 	</section>
+	<section class="section-p1">
+		<div class="reviews-container">
+			{% for review in reviews %}
+				<div class="review-row">
+					<p>{{ review.text }}</p>
+					<p>{{ review.name }}</p>
+					<div class="star">
+						{% for star in "x"|ljust:review.rating %}
+							<i class="fas fa-star"></i>
+						{% endfor %}
+					</div>
+					<div class="review-images">
+						{% for image in review.reviewimage_set.all %}
+							<img src="{{ image.imageURL}}">
+						{% endfor %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</section>
+	<script>
+	    // Функція для зміни головного зображення при кліку на маленьку картинку
+	    function changeMainImage(event) {
+	        // Отримати URL зображення з атрибуту src маленької картинки
+	        var imageURL = event.target.src;
 
+	        // Отримати індекс елемента в списку images з атрибуту data-index
+	        var index = event.target.getAttribute("data-index");
+
+	        // Змінити src головного зображення на вибране зображення
+	        document.getElementById("mainImage").src = imageURL;
+	    }
+	</script>
 {% endblock content %}
-
-
-<!-- src="{{ product.imageURL }}" -->
