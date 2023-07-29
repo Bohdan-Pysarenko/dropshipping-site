@@ -1,0 +1,64 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<section class="section-p1">
+		{% if order != None %}
+			<div class="cart-container">
+				<h1>Shopping Cart</h1>
+				<button>CHECK OUT</button>
+				<div class="grid-header">
+					<h2>QUANTITY</h2>
+					<h2>TOTAL</h2>
+				</div>
+				{% for item in order.orderitem_set.all %}
+					<img src="{{ item.product.imageURL }}">
+					<h5>{{ item.product.name }}</h5>
+					<h5>{{ item.quantity }}</h5>
+					<h5>{{ item.get_total }}</h5>
+				{% endfor %}
+				<br>
+			</div>
+			<div class="summary-table">
+				<h2>Subtotal</h2>
+				<p>total price</p>
+				<h3>Shipping</h3>
+				<p>Free!</p>
+				<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
+			</div>
+		{% else %}
+			<h1 style="text-align:center;padding: 100px">No Items in cart</h1>
+		{% endif %}
+	</section>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+        <label>Title</label><br>
+        <input type="text" name="name" placeholder="Enter product title" required><br>
+
+        <label>Select a category</label><br>
+        <select name="selected_category">
+            <option value='none'>Select a product...</option>
+            {% for category in categories %}
+            	<option value='{{category.slug}}'>{{category.name}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Crossed price</label><br>
+        <input type="number" name="crossed_out_price" placeholder="Enter crocced price" step="0.01" required><br>
+
+        <label>Price</label><br>
+        <input type="number" name="price" placeholder="Enter price" step="0.01" required><br>
+
+        <label>Is available</label><br>
+        <input type="checkbox" name="available" value="True"><br>
+
+        <label for="description">Description</label><br>
+    	<textarea name="description" rows="10"></textarea><br>
+
+    	<label>Pictures</label><br>
+        <input type="file" name="images" required multiple><br>
+
+        <input type="submit" value="Send"/>
+	</form>
+{% endblock content %}
+
+
+
+
+
+

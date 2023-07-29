@@ -1,0 +1,50 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<form method="POST" action="{% url 'add_review' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+		<label>Select a product</label><br>
+        <select name="selected_product">
+            <option value='none'>Select a product...</option>
+            {% for product in products %}
+            	<option value='{{product.slug}}'>{{product.name}}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Name</label><br>
+        <input type="text" name="name" placeholder="Enter author's name" required><br>
+
+        <label>Revies's text</label><br>
+        <textarea name="text" rows="10" required></textarea><br>
+        <!-- <input type="text" name="text" placeholder="Enter text" required><br> -->
+
+        <label>Rating</label><br>
+        <input type="number" name="rating" placeholder="Enter number of stars (1-5)" required><br>
+
+        <label>Pictures</label><br>
+        <input type="file" name="images" required multiple><br>
+
+        <input type="submit" value="Send"/>
+	</form>
+{% endblock content %}
+
+
+
+
+
+
