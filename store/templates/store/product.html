@@ -18,19 +18,43 @@
 {% block content %}
 	<section class="section-p1">
 		<div id="container">
-  			<div class="small-img-group">
-  				{% for image in images %}
-	  				<div class="small-img-row">
-	  					<img src="{{ image.imageURL }}">
-	  				</div>
-  				{% endfor %}
-  			</div>
-  			<div class="image_container">
-  				<div id="product_image" class="main-image">
-    				<img src="{{ product.imageURL }}">
-    			</div>
-  			</div>
+			<div class="sticky_container">
+				<div class="sticky">
+					<div class="small-img-group">
+						{% for image in images %}
+							<div class="small-img-row">
+								<img src="{{ image.imageURL }}">
+							</div>
+						{% endfor %}
+					</div>
+					<div class="image_container">
+						<div id="product_image" class="main-image">
+						  <img src="{{ product.imageURL }}">
+					  </div>
+					</div>
+				</div>
+			</div>
   			
+
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+			  // Знаходимо всі малі зображення
+			  const smallImages = document.querySelectorAll('.small-img-group img');
+			  // Знаходимо основне зображення
+			  const mainImage = document.querySelector('#product_image img');
+			
+			  // Перебираємо всі малі зображення
+			  smallImages.forEach(function(smallImg) {
+				// Додаємо обробник події для кожного зображення
+				smallImg.addEventListener('click', function() {
+				  // Отримуємо посилання на нове зображення з атрибута src клікнутого зображення
+				  const newImageSrc = this.getAttribute('src');
+				  // Змінюємо src основного зображення на нове зображення
+				  mainImage.setAttribute('src', newImageSrc);
+				});
+			  });
+			});
+			</script>
 
   			<div class="product-details">
     			<h2>{{ product.name }}</h2>
@@ -52,6 +76,8 @@
 					<span class="save">Save {{ product.calc_save }}%</span>
 				</div>
 
+
+				<!-- https://www.youtube.com/watch?v=9T2Et0SswTs&ab_channel=%D0%9A%D0%A3%D0%A0%D0%93%D0%AB%D0%A1%D0%A2%D0%90%D0%9D%D0%A1%D0%90%D0%9B%D0%98%D0%9C%D0%9E%D0%92 -->
 				<div class="prospect">
 					<p>Free Worldwide Shipping</p>
 					<p>Easy Returns & Exchanges</p>
@@ -101,6 +127,26 @@
 							<button>{{ variant.number_in_group }}</button>
 						{% endif %}
 					{% endfor %}
+					<!-- https://www.youtube.com/watch?v=9T2Et0SswTs&ab_channel=%D0%9A%D0%A3%D0%A0%D0%93%D0%AB%D0%A1%D0%A2%D0%90%D0%9D%D0%A1%D0%90%D0%9B%D0%98%D0%9C%D0%9E%D0%92 -->
+
+
+					<script>
+						let optionButtons = document.querySelectorAll('button');
+
+						function handleOptionClick() {
+						let optionValue = this.textContent;
+						let optionType = this.parentNode.querySelector('h4').textContent.toLowerCase();
+
+						localStorage.setItem(optionType, optionValue);
+
+						console.log(optionType + ': ' + optionValue);
+						}
+
+						optionButtons.forEach(function(button) {
+						button.addEventListener('click', handleOptionClick);
+						});
+						
+					</script>
 
 					<h4>QUANTITY</h4>
 					<input type="number" value="1">
@@ -120,4 +166,3 @@
 {% endblock content %}
 
 
-<!-- src="{{ product.imageURL }}" -->
