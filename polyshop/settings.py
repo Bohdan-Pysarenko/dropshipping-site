@@ -26,13 +26,14 @@ SECRET_KEY = 'django-insecure-swm2ljg+f2u88m#y^leu%*176m-z)y2*w8!=#qs@wzn99h$gxx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'collection.apps.CollectionConfig',
+    'register.apps.RegisterConfig',
     'store.apps.StoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -128,3 +129,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'

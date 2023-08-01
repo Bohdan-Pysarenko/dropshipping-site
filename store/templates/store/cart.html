@@ -37,10 +37,19 @@
 			</div>
 			<div class="summary-table">
 				<h2>Subtotal</h2>
-				<p>total price</p>
+				{% if request.session.coupon_id %}
+					<p>{{ cart_total }}</p>
+				{% else %}
+					<p>{{ order.get_cart_total }}</p>
+				{% endif %}
 				<h3>Shipping</h3>
 				<p>Free!</p>
 				<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
+				<form class="coupon" method="POST" action="{% url 'coupon' %}">
+					{% csrf_token %}
+					{{ form }}
+					<button type="submit">Apply Coupon</button>
+				</form>
 			</div>
 		{% else %}
 			<h1 style="text-align:center;padding: 100px">No Items in cart</h1>

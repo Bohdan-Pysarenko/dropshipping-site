@@ -13,7 +13,9 @@ admin.site.register(Variant)
 admin.site.register(ProductImage)
 admin.site.register(Review)
 admin.site.register(ReviewImage)
-
+admin.site.register(Subscription)
+admin.site.register(ShippingAddress)
+admin.site.register(Coupon)
 
 
 

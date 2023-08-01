@@ -95,7 +95,7 @@
 			{% for product in product_list %}
 				{% if forloop.counter <= 8 %}
 					<div class="product-box">
-						<a href="/{{product.slug}}"><img src="{{ product.imageURL }}"></a>
+						<a href="/{{product.slug}}"><img src="{{ product.productimage_set.first.imageURL }}"></a>
 						{% if product.available %}
 							<span class="onsale">Sale</span>
 						{% else %}
@@ -110,7 +110,7 @@
 								<i class="fas fa-star"></i>
 								<i class="fas fa-star"></i>
 							</div>
-							<p class="review-number">126</p>  
+							<p class="review-number">{{ product.reviews.count }}</p>  
 							<p> reviews</p>
 						</div>
 						<div class="price-box">

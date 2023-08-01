@@ -65,7 +65,7 @@
         <li><a href="{% url 'about' %}">About us</a></li>
         <li><a href="{% url 'shipping_policy' %}">Shipping</a></li>
         <li><a href="{% url 'refund_policy' %}">Refunds</a></li>
-        <li><a href="#">Track Order</a></li>
+        <li><a href="{% url 'track_order' %}">Track Order</a></li>
       </ul>
 
       <ul id="navbar-right">
@@ -91,8 +91,8 @@
       </ul>
 
       <ul id="navbar-login">
-        <li><a href="">Log in</a></li>
-        <li><a href="">Cart</a></li>
+        <li><a href="/login/">Log in</a></li>
+        <li><a href="/cart/">Cart</a></li>
       </ul>
     </div>
     {% block header %}
@@ -130,12 +130,11 @@
     <div class="col">
       <h4>GET 10% OFF</h4>
       <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-      <div class="form">
-        <!-- <form> -->
-          <input type="text" placeholder="Your email address">
-          <button class="normal">Sign Up</button>
-        <!-- </form> -->
-      </div>
+      <form class="form" method="POST" action="{% url 'subscribe' %}">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Your email address">
+        <button class="normal">Sign Up</button>
+      </form>
     </div>
   </footer>
 

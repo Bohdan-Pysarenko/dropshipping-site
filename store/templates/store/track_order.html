@@ -1,0 +1,26 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<style>
+		#navbar-container {
+			border-bottom: 1px solid #b5b2c8;
+		}
+		
+		#navbar-right li p,
+		#navbar-bottom li a,
+		#navbar-login li a,
+		#navbar li a {
+			color: #000;
+		} 
+	</style>
+{% endblock css %}
+{% block content %}
+	<h1>Track Your Order</h1>
+	<form method="POST" action="{% url 'track_order' %}">
+		{% csrf_token %}
+		<label>Order number or tracking number</label><br>
+		<input type="text" name="track_order">
+		<button type="submit">Check</button>
+	</form>
+{% endblock content %}
