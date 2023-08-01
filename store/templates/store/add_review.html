@@ -14,6 +14,68 @@
 			color: #000;
 		} 
 	</style>
+	<style>
+		/* Style for the form container */
+		form {
+		  max-width: 400px;
+		  margin: 0 auto;
+		  padding: 20px;
+		  border: 1px solid #ccc;
+		  border-radius: 5px;
+		  font-family: Arial, sans-serif;
+		}
+	  
+		/* Style for form labels */
+		label {
+		  display: block;
+		  margin-bottom: 5px;
+		  font-weight: bold;
+		}
+	  
+		/* Style for form inputs */
+		input[type="text"],
+		input[type="number"],
+		select,
+		textarea {
+		  width: 100%;
+		  padding: 10px;
+		  margin-bottom: 10px;
+		  border: 1px solid #ccc;
+		  border-radius: 5px;
+		  box-sizing: border-box;
+		  font-family: Arial, sans-serif;
+		}
+	  
+		/* Style for the select dropdown */
+		select {
+		  height: 40px;
+		}
+	  
+		/* Style for the textarea */
+		textarea {
+		  resize: vertical; /* Allows vertical resizing of the textarea */
+		}
+	  
+		/* Style for the file input */
+		input[type="file"] {
+		  margin-top: 5px;
+		}
+	  
+		/* Style for the submit button */
+		input[type="submit"] {
+		  background-color: #4CAF50;
+		  color: #fff;
+		  border: none;
+		  padding: 10px 20px;
+		  border-radius: 5px;
+		  cursor: pointer;
+		}
+	  
+		/* Additional styles for the submit button on hover */
+		input[type="submit"]:hover {
+		  background-color: #45a049;
+		}
+	  </style>	  
 {% endblock css %}
 {% block content %}
 	<h1>Add Review</h1>

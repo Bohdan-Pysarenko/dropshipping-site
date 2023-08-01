@@ -14,6 +14,96 @@
 			color: #000;
 		} 
 	</style>
+	<style>
+		.summary-table {
+			max-width: 300px;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			margin-left: auto;
+		}
+		
+		.summary-table h2 {
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
+		
+		.summary-table p {
+			margin: 0;
+			font-size: 16px;
+			color: #333;
+		}
+		
+		.summary-table h3 {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+		
+		.summary-table p:nth-of-type(2) {
+			margin: 0;
+			font-size: 16px;
+			color: #4caf50; 
+		}
+		
+		.summary-table button {
+			background-color: transparent;
+			color: black;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 4px;
+			font-size: 16px;
+			cursor: pointer;
+			display: block;
+			width: 100%;
+			margin-top: 20px;
+			border: 2px solid black;
+			border-radius: 12px;
+		}
+		
+		.summary-table button a {
+			text-decoration: none;
+			color: black;
+		}
+		
+		.summary-table button:hover {
+			background-color: rgba(0, 0, 0, .1);;
+		}
+	</style>
+	<style>
+		.grid-container {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-gap: 10px;
+		max-width: 800px;
+		margin: 0 auto;
+		}
+
+		.grid-header {
+		margin-top: 32px;
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: 0.5fr 1.5fr 1fr 1fr;
+		gap: 10px;
+		font-weight: bold;
+		}
+
+		.cart-row {
+		display: grid;
+		grid-template-columns: 0.5fr 1.5fr 1fr 1fr;
+		gap: 10px;
+		align-items: center;
+		}
+
+		.cart-row img {
+		max-width: 100px;
+		max-height: 100px;
+		}
+
+		.cart-row h5 {
+		margin: 0;
+		}
+	</style>
+		
 {% endblock css %}
 {% block content %}
 	<section class="section-cart">
@@ -22,6 +112,10 @@
 				<h1>Shopping Cart</h1>
 				<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
 				<div class="grid-header">
+					<!-- div for grid align -->
+					<div></div> 
+					<div></div>
+					<!-- div for grid align -->
 					<h2>QUANTITY</h2>
 					<h2>TOTAL</h2>
 				</div>
