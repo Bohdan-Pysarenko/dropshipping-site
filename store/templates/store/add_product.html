@@ -16,6 +16,7 @@
 	</style>
 {% endblock css %}
 {% block content %}
+	<h1>Add Product</h1>
 	<form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
 	{% csrf_token %}
         <label>Title</label><br>

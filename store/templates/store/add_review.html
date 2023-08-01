@@ -16,6 +16,7 @@
 	</style>
 {% endblock css %}
 {% block content %}
+	<h1>Add Review</h1>
 	<form method="POST" action="{% url 'add_review' %}" enctype="multipart/form-data">
 	{% csrf_token %}
 		<label>Select a product</label><br>

@@ -17,9 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from register import views as v
+
+handler404 = "store.views.handle_404"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('register/', v.register, name='register'),
+    path('login/', v.handlelogin, name='login'),
+    path('logout/', v.handlelogout, name='logout'),
     path('', include('store.urls')),
     path('collections/', include('collection.urls')),
 ]
