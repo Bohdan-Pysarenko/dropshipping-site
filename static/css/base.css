@@ -8,9 +8,6 @@
 html {
   scroll-behavior: smooth;
 }
-body {
-  height: 100%;
-}
 
 .section-p1 {
   width: 80%;
