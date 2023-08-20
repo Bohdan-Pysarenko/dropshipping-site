@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_list_or_404, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
 from django.views.decorators.http import require_POST
+from django.core.mail import EmailMessage
+from django.conf import settings
 from django.utils import timezone
 from .models import *
 from .forms import *
@@ -72,9 +75,6 @@ def cart(request):
 	except Coupon.DoesNotExist:
 		discount = 0
 
-	print('discount', discount)
-	print(coupon_id)
-
 	cart_total = order.get_cart_total * (100 - discount) / 100
 
 	form = CouponApplyForm()
@@ -91,8 +91,39 @@ def checkout(request):
 
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
+	if request.method == 'POST':
+		data = request.POST
+
+		shipping_info = ShippingAddress.objects.create(
+			email=data['email'],
+			first_name=data['fname'],
+			last_name=data['lname'],
+			order=order,
+			address=data['address'],
+			city=data['city'],
+			country=data['country'],
+			zipcode=data['postal-code']
+			)
+
 	context = {'order':order}
 	return render(request, 'store/checkout.html', context)
+
+def complete_order(request):
+	if request.method == 'POST':
+		customer = request.user.customer
+
+		order = Order.objects.get(customer=customer, complete=False)
+
+		order.complete = True
+		order.save()
+
+		#order, created = Order.objects.get_or_create(customer=customer, complete=False)
+		print(' ')
+		print('New order was created for the same customer')
+		print(' ')
+
+
+	return render(request, '')
 
 @login_required
 def add_review(request):
@@ -188,6 +219,11 @@ def privacy_policy(request):
 def terms_of_service(request):
 	return render(request, 'store/terms_of_service.html')
 
+def contact_us(request):
+	if request.method == 'POST':
+		pass
+	return render(request, 'store/contact_us.html')
+
 def subscribe(request):
 	if request.method == 'POST':
 		data = request.POST
@@ -195,6 +231,16 @@ def subscribe(request):
 			pass
 		else:
 			subscribtion = Subscription.objects.create(email=data['email'])
+
+			email = EmailMessage(
+				'Thank Your For Subscription',
+				'There is your discount code',
+				settings.EMAIL_HOST_USER,
+				[data['email']])
+
+			email.fail_silently=False
+			email.send()
+
 
 	return redirect('home') 
 

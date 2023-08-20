@@ -1,7 +1,7 @@
 {% extends 'store/base.html' %}
 {% load static %}
 {% block title %}
-Track Your Order
+Contact Us
 {% endblock title %}
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
@@ -19,11 +19,19 @@ Track Your Order
 	</style>
 {% endblock css %}
 {% block content %}
-	<h1>Track Your Order</h1>
-	<form method="POST" action="{% url 'track_order' %}">
+	<h1>Need Any Help? Send Us A Message</h1>
+	<h4>We'll get back to you within one business day.</h4>
+	<form method="POST" action="{% url 'contact_us' %}">
 		{% csrf_token %}
-		<label>Order number or tracking number</label><br>
-		<input type="text" name="track_order">
-		<input type="submit" value="Check"/>
+		<label>Name</label><br>
+		<input type="text" name="name" required><br>
+
+		<label>Email</label><br>
+		<input type="email" name="email" required><br>
+
+		<label>Message</label><br>
+		<textarea name="message" rows="5" required></textarea><br>
+
+		<input type="submit" value="Send"/>
 	</form>
 {% endblock content %}

@@ -191,8 +191,9 @@ class Coupon(models.Model):
 		return self.code
 
 class ShippingAddress(models.Model):
-	email = models.EmailField() 
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+	email = models.EmailField()
+	first_name = models.CharField(max_length=200, null=True)
+	last_name = models.CharField(max_length=200, null=True)
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	address = models.CharField(max_length=200, null=False)
 	city = models.CharField(max_length=200, null=False)
@@ -209,26 +210,8 @@ class Subscription(models.Model):
 	def __str__(self):
 		return str(self.email)
 
-"""
-class Product(models.Model):
-	name = models.CharField(max_length=200, null=True)
-	price = models.DecimalField(max_digits=7, decimal_places=2)
-	image = models.ImageField(null=True, blank=True)
+class ContactUs(models.Model):
+	name = models.CharField(max_length=200)
+	email = models.EmailField()
+	message = models.TextField()
 
-	def __str__(self):
-		return self.name
-
-	@property
-	def imageURL(self):
-		try:
-			url = self.image.url
-		except:
-			url = ''
-		return url
-"""
-
-
-"""
-def get_upload_path(instance, filename):
-    return os.path.join(instance.product.name, filename)
-"""

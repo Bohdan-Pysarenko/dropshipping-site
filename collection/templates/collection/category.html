@@ -1,5 +1,8 @@
 {% extends 'store/base.html' %}
 {% load static %}
+{% block title %}
+{{ category.name }}
+{% endblock title %}
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
 	<style>
@@ -17,7 +20,7 @@
 {% endblock css %}
 {% block content %}
 	<section id="product1" class="section-p1">
-		<h2>OUR FAVORITE PLANTERS</h2>
+		<h2>{{ category.name|upper }}</h2>
 		<div class="product-container">
 			{% for product in products %}
 				<div class="product-box">

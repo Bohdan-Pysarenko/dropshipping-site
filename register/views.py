@@ -24,7 +24,7 @@ def register(request):
 
 		myuser = User.objects.create_user(email, email, password)
 		myuser.save()
-		messages.info(request, 'Signup SuccessFull! Please Login')
+		messages.info(request, 'Signup Successfull! Please Login')
 		return redirect('/login/')
 
 	return render(request, 'register/register.html')
