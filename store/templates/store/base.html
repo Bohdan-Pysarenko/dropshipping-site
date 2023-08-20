@@ -2,6 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
+<title>{% block title %}{% endblock title %}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
@@ -69,10 +70,8 @@
       </ul>
 
       <ul id="navbar-right">
-        <li><p>Icon</p></li>
-        <li><p>Icon</p></li>
-        <li><p>Icon</p></li>
-        <li><p>Currency</p></li>
+        <li><p><i class='fa fa-pinterest'></i></p></li>
+        <li><p>Language</p></li>
       </ul>
     </div>
 
@@ -96,7 +95,7 @@
         {% else %}
           <li><a href="/login/">Login</a></li>
         {% endif %}
-        <li><a href="/cart/">Cart</a></li>
+        <li><a href="/cart/"><i class='fa fa-shopping-cart'></i></a></li>
       </ul>
     </div>
     {% block header %}
