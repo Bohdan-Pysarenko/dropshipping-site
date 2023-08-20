@@ -103,7 +103,7 @@
   letter-spacing: 1px;
 }
 
-#container .prospect h4 {
+#container .prospect h4{
   margin-top: 20px;
   font-size: 15px;
   font-weight: 400;
@@ -116,7 +116,7 @@
 
 #container .add-to-cart {
   margin-top: 25px;
-
+  
 }
 
 #container .add-to-cart button {
@@ -138,7 +138,7 @@
   letter-spacing: 2px;
 }
 
-.description>p {
+.description > p {
   margin: 16px 0;
   font-size: 1rem;
 }
@@ -171,120 +171,3 @@
   background-color: transparent;
 }
 
-body {
-  margin: 0 auto;
-}
-
-@media screen and (max-width: 2560px) {
-  body {
-    max-width: 1440px;
-  }
-
-  #navbar-container {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 1440px) {
-  body {
-    max-width: 1024px;
-  }
-
-  #categories {
-    display: none;
-  }
-
-  #container .main-image img {
-    width: 360px;
-    height: 360px;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  body {
-    max-width: 768px;
-  }
-
-  #navbar,
-  #navbar-right {
-    display: none;
-  }
-
-  #hero-buttons {
-    display: flex;
-    width: 520px;
-  }
-
-  #hero-title {
-    text-align: center;
-  }
-
-  #hero-subtitle {
-    text-align: center;
-  }
-
-  #banners .small-banner2,
-  #banners .small-banner {
-    background-image: none;
-    height: auto;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    padding: 0;
-    margin: 20px;
-    justify-content: space-between;
-  }
-
-  .product-container {
-    justify-content: center;
-  }
-  #container .main-image img {
-    width: 260px;
-    height: 260px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  body {
-    max-width: 425px;
-  }
-  #header {
-    display: none;
-  }
-
-  #hero-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    width: 320px;
-  }
-  #container .main-image img {
-    width: 160px;
-    height: 160px;
-  }
-  .small-img-group {
-    display: none;
-  }
-  #container {
-    flex-direction: column;
-  }
-  .image_container {
-   width: auto;
-  }
-  #container .product-details {
-    max-width: none;
-    padding: 0;
-  }
-}
-
-@media screen and (max-width: 425px) {
-  body {
-    max-width: 350px;
-  }
-
-  #header {
-    padding: 0;
-    background-image: none;
-  }
-}
