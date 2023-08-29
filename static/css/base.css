@@ -17,7 +17,7 @@ html {
   width: 100%;
   background-size: cover;
   background-position: top 50% right 0;
-  padding: 0px 200px;
+  padding: 0px 150px;
 }
 
 .section-p1 {
@@ -32,7 +32,6 @@ html {
 .logo {
   width: 140px;
   height: 50px;
-  margin-left: 150px;
 }
 
 .announcement {
@@ -93,8 +92,8 @@ html {
 #categories {
   display: flex;
   align-items: center;
-  justify-content: start;
-  padding: 20px 30px;
+  justify-content: space-evenly;
+  padding: 20px 0px;
 }
 
 #navbar-bottom {
@@ -105,7 +104,8 @@ html {
 
 #navbar-bottom li {
   list-style: none;
-  padding: 0 20px;
+  padding: 0 1rem;
+  white-space: nowrap;
 }
 
 #navbar-bottom li a {
@@ -180,56 +180,27 @@ html {
   flex-wrap: wrap;
 }
 
-#department-container .department-box {
+.department-box {
   width: 23%;
   min-width: 300px;
   position: relative;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding-bottom: 30px;
 }
 
-#department-container .department-box img {
+.department-box img {
   width: 100%;
+  height: 100%;
 }
 
-#department-container .department-box span {
+.department-box span {
   font-size: 16px;
   border: none;
   position: absolute;
   padding: 16px 20px;
-  top: 40%;
-  left: 30%;
   background-color: #fff;
-  transform: translate(-50% -50%);
-}
-
-#department-container .department-box:nth-child(2) span {
-  top: 40%;
-  left: 10%;
-}
-
-#department-container .department-box:nth-child(3) span {
-  top: 40%;
-  left: 5%;
-}
-
-#department-container .department-box:nth-child(4) span {}
-
-#department-container .department-box:nth-child(5) span {
-  top: 40%;
-  left: 25%;
-}
-
-#department-container .department-box:nth-child(6) span {
-  top: 40%;
-  left: 15%;
-}
-
-#department-container .department-box:nth-child(7) span {}
-
-#department-container .department-box:nth-child(8) span {
-  top: 40%;
-  left: 22%;
 }
 
 #department-container a {
@@ -475,6 +446,7 @@ footer {
   flex-wrap: wrap;
   justify-content: space-around;
   background-color: #353535;
+  padding: 0px 150px;
 }
 
 footer .col {
@@ -495,7 +467,7 @@ footer h4 {
 }
 
 footer a {
-  font-size: 13px;
+  font-size: min(1.5vw, 16px);
   text-decoration: none;
   color: #f2f2f2;
   margin-bottom: 12px;
@@ -507,7 +479,7 @@ footer .form {
 }
 
 footer p {
-  font-size: 13px;
+  font-size: min(1.5vw, 16px);
   margin-bottom: 12px;
   color: #f2f2f2;
 }
@@ -578,7 +550,7 @@ body {
 
 @media screen and (max-width: 2560px) {
   body {
-    max-width: 1440px;
+/*    max-width: 1440px;*/
   }
   #navbar-container {
     display: none;
@@ -587,16 +559,23 @@ body {
 
 @media screen and (max-width: 1440px) {
   body {
-    max-width: 1024px;
+/*    max-width: 1024px;*/
   }
   #categories {
     display: none;
+  }
+  #hero-title {
+    text-align: center;
+  }
+
+  footer {
+    padding: 0px 50px;
   }
 }
 
 @media screen and (max-width: 1024px) {
   body {
-    max-width: 768px;
+/*    max-width: 768px;*/
   }
   #navbar, #navbar-right {
     display: none;
@@ -629,11 +608,14 @@ body {
     width: 260px;
     height: 260px;
   }
+  footer {
+    padding: 0px 0px;
+  }
 }
 
 @media screen and (max-width: 768px) {
   body {
-    max-width: 425px;
+/*    max-width: 425px;*/
   }
   #hero-buttons {
     display: flex;
@@ -641,11 +623,29 @@ body {
     gap: 32px;
     width: 320px;
   }
+
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  footer .col {
+    flex: 1;
+    align-items: center;
+    padding-bottom: 0px;
+  }
+  footer .col-over {
+    flex: 100%;
+    order: -1;
+    align-items: center;
+  }
+  footer .form {
+    width: 50%;
+  }
 }
 
 @media screen and (max-width: 425px) {
   body {
-    max-width: 350px;
+/*    max-width: 350px;*/
   }
   #header {
     padding: 0;
