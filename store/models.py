@@ -65,20 +65,6 @@ class Product(models.Model):
 			url = ''
 		return url
 
-class Variant(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-	color = models.CharField(max_length=100, null=True, blank=True)
-	size = models.CharField(max_length=100, null=True, blank=True)
-	material = models.CharField(max_length=100, null=True, blank=True)
-	power = models.CharField(max_length=100, null=True, blank=True)
-	number_in_group = models.CharField(max_length=100, null=True, blank=True)
-	crossed_out_price = models.DecimalField(max_digits=8, decimal_places=2)
-	price = models.DecimalField(max_digits=8, decimal_places=2)
-	available = models.BooleanField(default=True, blank=True)
-
-	def __str__(self):
-		return f'{self.product.name} - {self.color} - {self.size} - {self.material} - {self.power} - {self.number_in_group}'
-
 class ProductAttribute(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.ForeignKey(AttributeValue, on_delete=models.CASCADE, null=True)
@@ -87,6 +73,9 @@ class ProductAttribute(models.Model):
 
     def __str__(self):
         return f'{self.product.name} - {self.attribute.value} (Modifier: {self.price_modifier})'
+
+    def get_attribute_value(self):
+    	return self.attribute.value
 
 
 # class ProductAttribute(models.Model):

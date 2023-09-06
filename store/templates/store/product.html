@@ -7,7 +7,12 @@
 
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+	<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
 	<style>
+		#header {
+			background-image: none;
+		}
 		#navbar-container {
 			border-bottom: 1px solid #b5b2c8;
 		}
@@ -20,10 +25,9 @@
 		} 
 
 
-		.section-p1 {
-		background-color: #f5f5f5;
+		/*.section-p1 {
 		padding: 20px;
-		}
+		}*/
 
 		/* Reviews container */
 		.reviews-container {
@@ -42,40 +46,25 @@
 
 		/* Review text */
 		.review-row p:first-child {
-		font-size: 16px;
+		font-size: 1.1rem;
 		margin-bottom: 10px;
 		}
 
 		/* Reviewer name */
 		.review-row p:nth-child(2) {
-		font-size: 14px;
+		font-size: 1.1rem;
 		color: #999999;
 		}
 
 		/* Star rating */
-		.star {
-		margin-top: 10px;
-		}
 
 		.star i {
 		color: #f5c518;
+		font-size: 1.2rem;
 		}
 
 		/* Review images */
-		.review-images {
-		display: flex;
-		flex-wrap: wrap;
-		margin-top: 10px;
-		gap: 10px;
-		}
-
-		.review-images img.viewable {
-		max-width: 80px;
-		max-height: 80px;
-		margin-bottom: 10px;
-		border-radius: 4px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
+		
 
 		/* Media query for responsiveness */
 		@media (max-width: 768px) {
@@ -91,22 +80,23 @@
 	</style>
 {% endblock css %}
 {% block content %}
+
 	<section class="section-p1">
 		<div id="container">
-  			<div class="small-img-group">
-  				{% for image in images %}
-	  				<div class="small-img-row">
-	  					<img src="{{ image.imageURL }}" data-index="{{ forloop.counter0 }}" onclick="changeMainImage(event)">
-	  				</div>
-  				{% endfor %}
+			<div class="sticky-container">
+				<div class="little-sticky-container">
+		  			<div class="small-img-group">
+		  				{% for image in images %}
+			  				<div class="small-img-row">
+			  					<img src="{{ image.imageURL }}" data-index="{{ forloop.counter0 }}" onclick="changeMainImage(event)">
+			  				</div>
+		  				{% endfor %}
+		  			</div>
+		  			<div class="image-container">
+		    			<img src="{{ images.0.imageURL }}" id="mainImage">
+		  			</div>
+	  			</div>
   			</div>
-  			<div class="image_container">
-  				<div id="product_image" class="main-image">
-    				<!-- <img src="{{ product.imageURL }}"> -->
-    				<img src="{{ images.0.imageURL }}" id="mainImage">
-    			</div>
-  			</div>
-  			
 
   			<div class="product-details">
     			<h2>{{ product.name }}</h2>
@@ -133,23 +123,21 @@
 					<p>Easy Returns & Exchanges</p>
 					<p>Fast, Friendly Support</p>
 					<p>In stock, ready to ship</p>
-					{% for variant in variants %}
-						{% if variant.color %}
-							{% if forloop.counter == 1 %}
-								<h4>COLOR</h4>
-							{% endif %}
-							<button>{{ variant.color }}</button>
-						{% endif %}
+					
+					{% for attribute, attribute_values in attribute_value_map.items %}
+						<p>{{ attribute }}</p>
+						{% for attribute_value in attribute_values %}
+							<button>{{ attribute_value }}</button>
+						{% endfor %}
 					{% endfor %}
 
-					{% for variant in variants %}
-						{% if variant.size %}
-							{% if forloop.counter == 1 %}
-								<h4>SIZE</h4>
-							{% endif %}
-							<button>{{ variant.size }}</button>
-						{% endif %}
-					{% endfor %}
+					<!-- {% for pa in product_attributes %}
+					  <p>{{ pa.attribute.attribute.name }}: 
+					    {% for value in pa.attribute.productattribute_set.all %}
+					      <button>{{ value.get_attribute_value }}</button>
+					    {% endfor %}
+					  </p>
+					{% endfor %} -->
 
 					<!-- <h4>QUANTITY</h4>
 					<input type="number" value="1">
@@ -176,41 +164,30 @@
 	</section>
 	<section class="section-p1">
 		<div class="reviews-container">
+			<h2>CUSTOMER REVIEWS</h2>
 			{% for review in reviews %}
 				<div class="review-row">
-					<p>{{ review.text }}</p>
 					<p>{{ review.name }}</p>
 					<div class="star">
 						{% for star in "x"|ljust:review.rating %}
 							<i class="fas fa-star"></i>
 						{% endfor %}
 					</div>
-					<div class="review-images">
-						{% for image in review.reviewimage_set.all %}
-							<style>
-								img.non-view {
-									display: none;
-									position: absolute;
-									width: 160px;
-									z-index: 666;
-									right: 50%;
-									left: -50%;
-								}
-								.viewable:hover {
-									cursor: pointer;
-								}
-								.viewable:hover + .non-view{
-									display: block;
-								}
-								.viewable-container {
-									position: relative;
-								}
-							</style>
-							<div class="viewable-container">
-								<img class="viewable" src="{{ image.imageURL}}">
-								<img class="non-view" src="{{ image.imageURL}}">
+					<p class="review-id" style="display:none;" data-review-id="{{ review.id }}"></p>
+					<p>{{ review.text }}</p>
+
+					<div class="review-images" id="review-images">
+						<div class="swiper">
+						  	<div class="swiper-wrapper">
+								{% for image in review.reviewimage_set.all %}
+									<div class="viewable-container swiper-slide">
+										<img class="viewable " src="{{ image.imageURL}}">
+									</div>
+								{% endfor %}
 							</div>
-						{% endfor %}
+							<div class="swiper-button-prev"></div>
+						  	<div class="swiper-button-next"></div>
+						</div>
 					</div>
 				</div>
 			{% endfor %}
@@ -229,4 +206,5 @@
 	        document.getElementById("mainImage").src = imageURL;
 	    }
 	</script>
+	<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 {% endblock content %}
