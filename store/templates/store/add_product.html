@@ -6,6 +6,9 @@ Add Product
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
 	<style>
+		#header {
+			background-image: none;
+		}
 		#navbar-container {
 			border-bottom: 1px solid #b5b2c8;
 		}
@@ -16,10 +19,15 @@ Add Product
 		#navbar li a {
 			color: #000;
 		} 
+		h1 {
+			text-align: center;
+			margin-top: 5rem;
+			margin-bottom: 2rem;
+		}
 	</style>
 	<style>
 		form {
-			max-width: 400px;
+			max-width: 1200px;
 			margin: 0 auto;
 			padding: 20px;
 			border: 1px solid #ccc;
@@ -28,7 +36,8 @@ Add Product
 		
 		label {
 			display: block;
-			margin-bottom: 5px;
+			margin-bottom: 0.5rem;
+			margin-top: 1rem;
 			font-weight: bold;
 		}
 		
@@ -71,38 +80,117 @@ Add Product
 	</style>
 {% endblock css %}
 {% block content %}
-	<h1>Add Product</h1>
-	<form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
-	{% csrf_token %}
-        <label>Title</label><br>
-        <input type="text" name="name" placeholder="Enter product title" required><br>
+	<section class="section-p1">
+		<h1>Add Product</h1>
+		<form id="myForm" method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
+		{% csrf_token %}
+	        <label>Title</label>
+	        <input type="text" name="name" placeholder="Enter product title" required>
 
-        <label>Select a category</label><br>
-        <select name="selected_category">
-            <option value='none'>Select a product...</option>
-            {% for category in categories %}
-            	<option value='{{category.slug}}'>{{category.name}}</option>
-            {% endfor %}
-        </select><br>
+	        <label>Select a category</label>
+	        <select name="selected_category">
+	            <option value='none'>Select a category...</option>
+	            {% for category in categories %}
+	            	<option value='{{category.slug}}'>{{category.name}}</option>
+	            {% endfor %}
+	        </select>
 
-        <label>Crossed price</label><br>
-        <input type="number" name="crossed_out_price" placeholder="Enter crocced price" step="0.01" required><br>
+	        <label>Crossed price</label>
+	        <input type="number" name="crossed_out_price" placeholder="Enter crocced price" step="0.01" required>
 
-        <label>Price</label><br>
-        <input type="number" name="price" placeholder="Enter price" step="0.01" required><br>
+	        <label>Price</label>
+	        <input type="number" name="price" placeholder="Enter price" step="0.01" required>
 
-        <label>Is available</label><br>
-        <input type="checkbox" name="available" value="True"><br>
+	        <label>Is available</label>
+	        <input type="checkbox" name="available" value="True">
 
-        <label for="description">Description</label><br>
-    	<textarea name="description" rows="10"></textarea><br>
+	        <label for="description">Description</label>
+	    	<textarea name="description" rows="20"></textarea>
 
-    	<label>Pictures</label><br>
-        <input type="file" name="images" required multiple><br>
+	    	<label>Attribute 1</label>
+			<div id="attribute-fields">
+			    <input type="text" name="attribute[]" placeholder="Attribute 1">
+			    <label>Value</label>
+			    <input type="text" name="value[]" placeholder="Value 1">
+			</div>
+			<button type="button" id="add-attribute">Add Attribute</button>
 
-        <input type="submit" value="Send"/>
-	</form>
+	    	<label>Pictures</label>
+	        <input type="file" name="images" required multiple>
+
+	        <input type="submit" value="Send"/>
+		</form>
+		  <script>
+		  	var form = document.getElementById('myForm');
+		  	var newInputNameGlobal;
+
+			function createNewField(input, newInputName = 'value[]') {
+			  var isNewFieldCreated = false;
+			  newInputNameGlobal = newInputName;
+			  input.addEventListener('input', function() {
+			    if (!isNewFieldCreated) {
+			      var newInput = document.createElement('input');
+			      newInput.type = 'text';
+			      newInput.name = newInputName;
+			      newInput.placeholder = 'Value ' + (form.querySelectorAll('input[name="${newInputName}"').length + 1);
+
+			      input.parentNode.insertBefore(newInput, input.nextSibling);
+			      isNewFieldCreated = true;
+
+			      // Викликаємо createNewField для новоствореного поля
+			      createNewField(newInput, newInputName);
+			    }
+
+			    if (input.value.trim() === '') {
+			      input.remove(); // Видаляємо сам елемент, якщо значення порожнє
+			    }
+			  });
+			}
+
+			var inputs = form.querySelectorAll('input[name^="value[]"]');
+			inputs.forEach(function(input) {
+			    createNewField(input);
+			});
+		  </script>
+		  <script>
+		  	var button = document.getElementById('add-attribute');
+		  	var form = document.getElementById('myForm');
+
+		  	button.addEventListener('click', function() {
+		  		var i = form.querySelectorAll('input[name^="attribute[]"]').length 
+		  		var newAttribute = document.createElement('input');
+		  		newAttribute.type = 'text';
+		  		newAttribute.name = 'attribute[]';
+		  		newAttribute.placeholder = 'Attribute ' + (i+1);
+
+		  		var label = document.createElement('label');
+		  		label.textContent = 'Attribute ' + (i+1);
+
+		  		var label1 = document.createElement('label');
+		  		label1.textContent = 'Value';
+
+		  		var newInput = document.createElement('input');
+		  		var newInputName = 'value' + i + '[]';
+		  		newInput.type = 'text';
+		  		newInput.name = newInputName;
+			    newInput.placeholder = 'Value 1';
+
+			    button.parentNode.insertBefore(label, button);
+			    button.parentNode.insertBefore(newAttribute, button);
+			    button.parentNode.insertBefore(label1, button);
+			    button.parentNode.insertBefore(newInput, button);
+
+			    createNewField(newInput, newInputName);
+		  	});
+		  </script>
+	</section>
 {% endblock content %}
+
+
+
+
+
+
 
 
 

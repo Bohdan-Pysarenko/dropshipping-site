@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.views.decorators.http import require_POST
 from django.core.mail import EmailMessage
+from django.http import JsonResponse
 from django.conf import settings
 from django.utils import timezone
 from .models import *
@@ -48,13 +49,21 @@ def product_render(request, slug):
 
 		product = Product.objects.get(slug=slug)
 		images = ProductImage.objects.all().filter(product=product)
-		attributes = ProductAttribute.objects.all().filter(product=product)
-		variants = Variant.objects.all().filter(product=product)
+
+		product_attributes = ProductAttribute.objects.filter(product=product)
+		unique_attributes = ProductAttribute.objects.filter(product=product).values_list('attribute__attribute__name', flat=True).distinct()
+		attribute_value_map = {}
+
+		for attribute_name in unique_attributes:
+		    attribute_values = ProductAttribute.objects.filter(product=product, attribute__attribute__name=attribute_name).values_list('attribute__value', flat=True).distinct()
+		    attribute_value_map[attribute_name] = list(attribute_values)
+
+
 		reviews = Review.objects.filter(product=product)
 
-		#print(attributes.value.all())
-		context = {'product': product, 'images': images, 'variants': variants,
-			'reviews': reviews}
+
+		context = {'product': product, 'images': images, 'attribute_value_map': attribute_value_map,
+		 'reviews': reviews}
 		return render(request, 'store/product.html', context)
 	except Product.DoesNotExist:
 		return redirect('home')
@@ -157,11 +166,28 @@ def add_product(request):
 	if request.user.is_staff:
 		if request.method == 'POST':
 			data = request.POST
+			print(data)
 			images = request.FILES.getlist('images')
 
 			slug = name_to_slug(data['name'])
 			selected_category = data['selected_category']
 			selected_category_id = Category.objects.get(slug=selected_category).id
+
+			attributes_and_values = []
+
+			for x in range(len(data.getlist('attribute[]'))):
+				attribute_name = data.getlist('attribute[]')[x]
+				value_name = 'value[]' if x == 0 else f'value{x}[]'
+
+				attribute, _ = Attribute.objects.get_or_create(name=attribute_name)
+
+				cleaned_values = []
+
+				for value in data.getlist(value_name):
+					if value != '':
+						cleaned_values.append(value)
+				
+				attributes_and_values.append((attribute, cleaned_values))
 
 			product = Product.objects.create(
 				name=data['name'],
@@ -171,6 +197,11 @@ def add_product(request):
 				available=data['available'],
 				description=data['description']
 			)
+
+			for attribute, values in attributes_and_values:
+				for value in values:
+					attribute_value, _ = AttributeValue.objects.get_or_create(attribute=attribute, value=value)
+					ProductAttribute.objects.create(product=product, attribute=attribute_value)
 
 			for image in images:
 				photo = ProductImage.objects.create(product=product, image=image)
@@ -247,3 +278,22 @@ def subscribe(request):
 def name_to_slug(name):
 	slug = name.lower().replace(' ', '-')
 	return slug
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

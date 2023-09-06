@@ -87,6 +87,7 @@
           <li><a href="{% url 'collection:category' slug='car' %}">Car</a></li>
           <li><a href="{% url 'collection:category' slug='bestsellers' %}">Bestsellers</a></li>
           <li><a href="{% url 'collection:category' slug='other' %}">Others</a></li>
+          <a href="#" id="close"><i class="fa fa-times"></i></a>
       </ul>
 
       <ul id="navbar-login">
@@ -95,8 +96,11 @@
         {% else %}
           <li><a href="/login/">Login</a></li>
         {% endif %}
-        <li><a href="/cart/"><i class='fa fa-shopping-cart'></i></a></li>
       </ul>
+    </div>
+    <div class="mobile">
+      <a href="/cart/"><i class='fa fa-shopping-cart'></i></a>
+      <i id="bar" class="fa fa-bars"></i>
     </div>
     {% block header %}
 
@@ -130,7 +134,7 @@
       <a href="{% url 'terms_of_service' %}">Terms of Service</a>
     </div>
 
-    <div class="col">
+    <div class="col col-over">
       <h4>GET 10% OFF</h4>
       <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
       <form class="form" method="POST" action="{% url 'subscribe' %}">
@@ -142,7 +146,7 @@
   </footer>
 
   <script src="https://kit.fontawesome.com/d990a4246b.js" crossorigin="anonymous"></script>
-  <script src="{% static 'main.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
     
 </body>
 </html>
