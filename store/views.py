@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_list_or_404, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
 from django.views.decorators.http import require_POST
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
@@ -8,6 +7,8 @@ from django.conf import settings
 from django.utils import timezone
 from .models import *
 from .forms import *
+import json
+from time import sleep
 
 # Create your views here.
 def handle_404(request, exception):
@@ -165,48 +166,54 @@ def add_review(request):
 def add_product(request):
 	if request.user.is_staff:
 		if request.method == 'POST':
-			data = request.POST
-			print(data)
-			images = request.FILES.getlist('images')
+			data = request
+			# data = json.loads(request.body)
+			print(data.POST)
 
-			slug = name_to_slug(data['name'])
-			selected_category = data['selected_category']
-			selected_category_id = Category.objects.get(slug=selected_category).id
+			# images = data.get('saved_images', [])
+			# print(images)
 
-			attributes_and_values = []
+			
+			# images = request.FILES.getlist('images')
 
-			for x in range(len(data.getlist('attribute[]'))):
-				attribute_name = data.getlist('attribute[]')[x]
-				value_name = 'value[]' if x == 0 else f'value{x}[]'
+		# 	slug = name_to_slug(data['name'])
+		# 	selected_category = data['selected_category']
+		# 	selected_category_id = Category.objects.get(slug=selected_category).id
 
-				attribute, _ = Attribute.objects.get_or_create(name=attribute_name)
+		# 	attributes_and_values = []
 
-				cleaned_values = []
+		# 	for x in range(len(data.getlist('attribute[]'))):
+		# 		attribute_name = data.getlist('attribute[]')[x]
+		# 		value_name = 'value[]' if x == 0 else f'value{x}[]'
 
-				for value in data.getlist(value_name):
-					if value != '':
-						cleaned_values.append(value)
+		# 		attribute, _ = Attribute.objects.get_or_create(name=attribute_name)
+
+		# 		cleaned_values = []
+
+		# 		for value in data.getlist(value_name):
+		# 			if value != '':
+		# 				cleaned_values.append(value)
 				
-				attributes_and_values.append((attribute, cleaned_values))
+		# 		attributes_and_values.append((attribute, cleaned_values))
 
-			product = Product.objects.create(
-				name=data['name'],
-				slug=slug,
-				crossed_out_price=data['crossed_out_price'],
-				price=data['price'],
-				available=data['available'],
-				description=data['description']
-			)
+		# 	product = Product.objects.create(
+		# 		name=data['name'],
+		# 		slug=slug,
+		# 		crossed_out_price=data['crossed_out_price'],
+		# 		price=data['price'],
+		# 		available=data['available'],
+		# 		description=data['description']
+		# 	)
 
-			for attribute, values in attributes_and_values:
-				for value in values:
-					attribute_value, _ = AttributeValue.objects.get_or_create(attribute=attribute, value=value)
-					ProductAttribute.objects.create(product=product, attribute=attribute_value)
+		# 	for attribute, values in attributes_and_values:
+		# 		for value in values:
+		# 			attribute_value, _ = AttributeValue.objects.get_or_create(attribute=attribute, value=value)
+		# 			ProductAttribute.objects.create(product=product, attribute=attribute_value)
 
-			for image in images:
-				photo = ProductImage.objects.create(product=product, image=image)
+		# 	for image in images:
+		# 		photo = ProductImage.objects.create(product=product, image=image)
 
-			product.category.set([selected_category_id])
+		# 	product.category.set([selected_category_id])
 
 		categories = Category.objects.all()
 		context = {'categories': categories}
@@ -231,6 +238,34 @@ def coupon_apply(request):
 			request.session['coupon_id'] = None
 	return redirect('cart')
 
+@require_POST
+def upload_form_data(request):
+	if request.method == 'POST':
+		data = request.POST
+
+		images = request.FILES.getlist('images')
+
+		slug = name_to_slug(data['name'])
+		selected_category = data['selected_category']
+		selected_category_id = Category.objects.get(slug=selected_category).id
+
+		product = Product.objects.create(
+			name=data['name'],
+			slug=slug,
+			crossed_out_price=data['crossed_out_price'],
+			price=data['price'],
+			available=data['available'],
+			description=data['description']
+		)
+
+		for image in images:
+			photo = ProductImage.objects.create(product=product, image=image)
+
+		product.category.set([selected_category_id])
+        
+
+		return JsonResponse({'slug': slug})
+	return JsonResponse({'error': 'No form data were sent.'}, status=400)
 
 def track_order(request):
 	return render(request, 'store/track_order.html')

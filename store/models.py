@@ -48,8 +48,6 @@ class Product(models.Model):
 	available = models.BooleanField(default=True,null=True, blank=True)
 	description = models.TextField(null=True, blank=True)
 
-	attributes = models.ManyToManyField(AttributeValue, through='ProductAttribute')
-
 	def __str__(self):
 		return self.name
 
@@ -67,7 +65,7 @@ class Product(models.Model):
 
 class ProductAttribute(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(AttributeValue, on_delete=models.CASCADE, null=True)
+    attribute = models.ManyToManyField(AttributeValue, blank=True)
     price_modifier = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     crossed_out_price_modified = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
