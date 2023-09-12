@@ -250,8 +250,9 @@ Add Product
 						priceCell.appendChild(priceInput);
 						selectCell.appendChild(selectInput);
 						currentCombination.forEach(function(text) {
-							const pTag = document.createElement('p');
-							pTag.textContent = text;
+							const pTag = document.createElement('input');
+							pTag.value = text;
+							pTag.disabled = true;
 							variantCell.appendChild(pTag);
 						});	
 				// 	}
@@ -300,6 +301,7 @@ Add Product
 
 		  <script>
 		  	function gatherTableData(slug) {
+				console.log("gatherTableData: ", slug)
 		  		var tableData = [];
 
 		  		tableData.push(slug);
@@ -338,27 +340,27 @@ Add Product
 		  	// }
 
 		  	function sendFormData() {
-		  		var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    			var formData = new FormData(document.getElementById('myForm'));
+				return new Promise((resolve, reject) => {
+					var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+					var formData = new FormData(document.getElementById('myForm'));
 
-			    fetch('/upload-form-data/', {
-			        method: 'POST',
-			        body: formData,
-			        headers: {
-			            'X-CSRFToken': csrfToken,
-			        },
-			    })
-			    .then(response => {
-			    	r = response.json();
-			    	console.log('Return: ', r);
-			        return r; 
-			    }).then(data => {
-			    	console.log('Data: ', data);
-    				return data;
-				})
-			    .catch(error => {
-			        console.error('Error: ', error);
-			    });
+					fetch('/upload-form-data/', {
+						method: 'POST',
+						body: formData,
+						headers: {
+							'X-CSRFToken': csrfToken,
+						},
+					})
+						.then((response) => response.json())
+						.then((data) => {
+							console.log('Return:', data);
+							resolve(data.slug); // Assuming 'slug' is a property in the response data
+						})
+						.catch((error) => {
+							console.error('Error:', error);
+							reject(error);
+						});
+				});
 			}
 
 		  	// Send data from the form to the server for adding new product to a database
@@ -381,27 +383,21 @@ Add Product
 		  		});
 		  	}
 
-		  	form.addEventListener('submit', function(event)	{
-		  		event.preventDefault();
+		  	form.addEventListener('submit', (event) => {
+				event.preventDefault();
 
-		  		var slug = sendFormData();
-		  		console.log('Slug: ', slug);
+				sendFormData()
+					.then((slug) => {
+						console.log('Slug:', slug);
 
-				var tableData = gatherTableData(slug);
-				// var formData = gatherFormData();
-
-		        // var combinedData = {
-		        //     'formData': formData,
-		        //     'tableData': tableData,
-		        // };
-
-				// console.log(combinedData);
-
-		        // Далі ви можете викликати addProductData() з combinedData
-		        // addProductData(form, combinedData);
-		        sendTableData(form, tableData);
-
-		  	});
+						gatherTableData(slug).then((tableData) => {
+							sendTableData(form, tableData);
+						});
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+			});
 
 		  </script>
 	</section>
