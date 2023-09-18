@@ -300,11 +300,20 @@ Add Product
 		  </script>
 
 		  <script>
-		  	function gatherTableData(slug) {
+		  	function gatherTableData(form, slug) {
 				console.log("gatherTableData: ", slug)
 		  		var tableData = [];
 
+		  		var attributes = form.querySelectorAll('input[name^="attribute[]"]');
+		  		var attributesList = [];
+
+		  		attributes.forEach(function(attribute) {
+		  			attributesList.push(attribute.value);
+		  			console.log('Attribute: ', attribute.value);
+		  		});
+
 		  		tableData.push(slug);
+		  		tableData.push(attributesList);
 
 		  		var rows = document.querySelectorAll('#variantTable tbody tr');
 
@@ -312,10 +321,10 @@ Add Product
 		  			var rowData = {};
 		  			if (row.querySelector('input[name="selected"]').checked) {
 		  				var variantsNamesList = [];
-		  				var variantsNames = row.querySelector('td:nth-child(2)').querySelectorAll('p');
+		  				var variantsNames = row.querySelector('td:nth-child(2)').querySelectorAll('input');
 
 		  				variantsNames.forEach((variantsName) => {
-  							variantsNamesList.push(variantsName.textContent);
+  							variantsNamesList.push(variantsName.value);
 						});
 
 		  				rowData.variant = variantsNamesList;
@@ -327,17 +336,6 @@ Add Product
 
 		  		return tableData;
 		  	}
-
-		  	// function gatherFormData() {
-		  	// 	var formData = new FormData(document.getElementById('myForm'));
-		  	// 	var formObject = {};
-
-		  	// 	formData.forEach(function(value, key) {
-		  	// 		formObject[key] = value;
-		  	// 	});
-
-		  	// 	return formObject;
-		  	// }
 
 		  	function sendFormData() {
 				return new Promise((resolve, reject) => {
@@ -390,9 +388,9 @@ Add Product
 					.then((slug) => {
 						console.log('Slug:', slug);
 
-						gatherTableData(slug).then((tableData) => {
-							sendTableData(form, tableData);
-						});
+						var tableData = gatherTableData(form, slug);
+						sendTableData(form, tableData);
+						
 					})
 					.catch((error) => {
 						console.error('Error:', error);

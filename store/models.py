@@ -63,6 +63,18 @@ class Product(models.Model):
 			url = ''
 		return url
 
+	@property
+	def first_image_url(self):
+		try:
+			# Отримати перший об'єкт ProductImage, якщо вони є
+			first_image = self.productimage_set.first()
+			if first_image:
+				return first_image.image.url
+			else:
+				return ''  # Повернути порожній рядок, якщо зображень немає
+		except:
+			return ''
+
 class ProductAttribute(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.ManyToManyField(AttributeValue, blank=True)
@@ -70,22 +82,10 @@ class ProductAttribute(models.Model):
     crossed_out_price_modified = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     def __str__(self):
-        return f'{self.product.name} - {self.attribute.value} (Modifier: {self.price_modifier})'
+        return f'{self.product.name} - {self.attribute.all()} (Modifier: {self.price_modifier})'
 
     def get_attribute_value(self):
     	return self.attribute.value
-
-
-# class ProductAttribute(models.Model):
-# 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-# 	attribute = models.ManyToManyField(Attribute, blank=True)
-# 	value = models.ManyToManyField(AttributeValue, blank=True)
-# 	crossed_out_price = models.DecimalField(max_digits=8, decimal_places=2, blank=True)
-# 	price = models.DecimalField(max_digits=8, decimal_places=2, blank=True)
-# 	available = models.BooleanField(default=True, blank=True)
-
-# 	def __str__(self):
-# 		return f'{self.product.name} - {self.value}'
 
 
 class ProductImage(models.Model):
@@ -146,9 +146,6 @@ class Order(models.Model):
 	complete = models.BooleanField(default=False, null=True, blank=False)
 	transaction_id = models.CharField(max_length=200, null=True)
 
-	# def __str__(self):
-	# 	return str(self.id)
-
 	@property
 	def get_cart_total(self):
 		orderitems = self.orderitem_set.all()
@@ -158,13 +155,18 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+	variant_title = models.CharField(max_length=500, null=True, blank=True)
+	variant_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField(default=0, null=True, blank=True)
 	date_added = models.DateTimeField(auto_now_add=True)
 
 	@property
 	def get_total(self):
-		total = self.product.price * self.quantity
+		if self.variant_price == None:
+			total = self.product.price * self.quantity
+		else:
+			total = self.variant_price * self.quantity
 		return total
 
 class Coupon(models.Model):

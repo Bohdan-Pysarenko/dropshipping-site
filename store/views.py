@@ -29,10 +29,15 @@ def home(request):
 	context = {'planters': planters, 'products_list': products_list}
 	return render(request, 'store/home.html', context)
 
-def product_render(request, slug):
+def product_render(request, slug, variant_title=None, variant_price=None):
 	try:
 		if request.method == 'POST':
-			product = Product.objects.get(slug=slug)
+			data = json.loads(request.body)
+			
+			variant_title = data[1]
+			variant_price = float(data[2])
+			
+			
 
 			try:
 				customer = request.user.customer
@@ -41,9 +46,19 @@ def product_render(request, slug):
 				customer, created = Customer.objects.get_or_create(device=device)
 
 			order, created = Order.objects.get_or_create(customer=customer, complete=False)
-			orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-			orderItem.quantity=request.POST['quantity']
-			orderItem.save()
+			if variant_title == None and variant_price == None:
+				product = Product.objects.get(slug=slug)
+				orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+				orderItem.quantity=request.POST['quantity']
+				orderItem.save()
+			else:
+				product = Product.objects.get(slug=slug)
+				slug = data[0]
+				quantity = int(data[3])
+				orderItem, created = OrderItem.objects.get_or_create(order=order, product=product, variant_title=variant_title, variant_price=variant_price)
+				print('Order Item: ', orderItem, orderItem.id)
+				orderItem.quantity=quantity
+				orderItem.save()
 
 			return redirect('/cart/')
 
@@ -77,6 +92,7 @@ def cart(request):
 		customer, created = Customer.objects.get_or_create(device=device)
 
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+	orderItems = order.orderitem_set.all()
 
 	coupon_id = request.session.get('coupon_id')
 	try:
@@ -89,7 +105,7 @@ def cart(request):
 
 	form = CouponApplyForm()
 
-	context = {'order': order, 'cart_total': cart_total, 'form': form}
+	context = {'order': order, 'orderItems': orderItems, 'cart_total': cart_total, 'form': form}
 	return render(request, 'store/cart.html', context)
 
 def checkout(request):
@@ -166,54 +182,29 @@ def add_review(request):
 def add_product(request):
 	if request.user.is_staff:
 		if request.method == 'POST':
-			data = request
-			# data = json.loads(request.body)
-			print(data.POST)
+			data = json.loads(request.body)
+			print(data)
 
-			# images = data.get('saved_images', [])
-			# print(images)
+			slug = data[0]
+			product = Product.objects.get(slug=slug)
 
-			
-			# images = request.FILES.getlist('images')
+			attributes_list = []
+			for x in range(len(data[1])):
+				attribute_name = data[1][x]
+				attribute, _ = Attribute.objects.get_or_create(name=attribute_name)
+				attributes_list.append(attribute)
 
-		# 	slug = name_to_slug(data['name'])
-		# 	selected_category = data['selected_category']
-		# 	selected_category_id = Category.objects.get(slug=selected_category).id
+			for x in range(2, len(data)):
+				combination = data[x] #{'variant': ['White', 's'], 'price': '15'}
 
-		# 	attributes_and_values = []
+				product_attribute = ProductAttribute.objects.create(product=product, price_modifier=combination['price'])
 
-		# 	for x in range(len(data.getlist('attribute[]'))):
-		# 		attribute_name = data.getlist('attribute[]')[x]
-		# 		value_name = 'value[]' if x == 0 else f'value{x}[]'
+				for y in range(len(combination['variant'])):
+					attribute_value, _ = AttributeValue.objects.get_or_create(attribute=attributes_list[y], value=combination['variant'][y])
+					product_attribute.attribute.add(attribute_value)
 
-		# 		attribute, _ = Attribute.objects.get_or_create(name=attribute_name)
 
-		# 		cleaned_values = []
-
-		# 		for value in data.getlist(value_name):
-		# 			if value != '':
-		# 				cleaned_values.append(value)
-				
-		# 		attributes_and_values.append((attribute, cleaned_values))
-
-		# 	product = Product.objects.create(
-		# 		name=data['name'],
-		# 		slug=slug,
-		# 		crossed_out_price=data['crossed_out_price'],
-		# 		price=data['price'],
-		# 		available=data['available'],
-		# 		description=data['description']
-		# 	)
-
-		# 	for attribute, values in attributes_and_values:
-		# 		for value in values:
-		# 			attribute_value, _ = AttributeValue.objects.get_or_create(attribute=attribute, value=value)
-		# 			ProductAttribute.objects.create(product=product, attribute=attribute_value)
-
-		# 	for image in images:
-		# 		photo = ProductImage.objects.create(product=product, image=image)
-
-		# 	product.category.set([selected_category_id])
+				print(product_attribute.attribute.all())
 
 		categories = Category.objects.all()
 		context = {'categories': categories}
@@ -249,12 +240,16 @@ def upload_form_data(request):
 		selected_category = data['selected_category']
 		selected_category_id = Category.objects.get(slug=selected_category).id
 
+		try:
+			available = data['available']
+		except:
+			available = False
 		product = Product.objects.create(
 			name=data['name'],
 			slug=slug,
 			crossed_out_price=data['crossed_out_price'],
 			price=data['price'],
-			available=data['available'],
+			available=available,
 			description=data['description']
 		)
 
@@ -266,6 +261,31 @@ def upload_form_data(request):
 
 		return JsonResponse({'slug': slug})
 	return JsonResponse({'error': 'No form data were sent.'}, status=400)
+
+@require_POST
+def variant_price(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		print(data)
+		slug = data[0]
+		product = Product.objects.get(slug=slug)
+
+		product_attributes = ProductAttribute.objects.filter(product=product)
+		desired_attributes = data[1:]
+		modifier = None
+
+		for product_attribute in product_attributes:
+		    attribute_values = product_attribute.attribute.all()
+		    attribute_values_list = [attribute_value.value for attribute_value in attribute_values]
+
+		    if set(desired_attributes) == set(attribute_values_list):
+		        modifier = product_attribute.price_modifier
+		        print(modifier)
+		        break
+		
+		response_data = {'modifier': modifier}
+
+		return JsonResponse(response_data)
 
 def track_order(request):
 	return render(request, 'store/track_order.html')
