@@ -402,23 +402,25 @@ html {
 
 /*СART PAGE*/
 .section-cart {
-  width: 70%;
+  width: 80%;
   margin: 32px auto;
+  min-height: 60vh;
 }
 
-.cart-container h1 {
+.section-cart h1 {
   text-align: center;
   font-weight: 350;
   font-size: 26px;
+  margin-top: 5rem;
+  margin-bottom: 3rem;
 }
 
-.cart-container button {
+.cart {
+  display: flex;
+}
+
+.cart-container {
   width: 100%;
-  background-color: #141414;
-  padding: 20px 0px;
-  font-size: 22px;
-  font-weight: 300;
-  margin-top: 60px;
 }
 
 .cart-container a {
@@ -432,14 +434,17 @@ html {
 }
 
 .cart-row {
+  width: 85%;
   margin-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .cart-row img {
   width: 200px;
   height: 200px;
+  margin: 20px;
 }
 
 

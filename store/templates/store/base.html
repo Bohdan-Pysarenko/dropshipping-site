@@ -24,6 +24,13 @@
         return cookieValue;
     }
 
+    function setCookie(name, value, days) {
+      var expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + days); // Додаємо кількість днів до поточної дати
+      var expires = "expires=" + expirationDate.toUTCString();
+      document.cookie = name + "=" + value + "; " + expires + "; path=/";
+    }
+
 
     function uuidv4() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -35,13 +42,14 @@
 
 
 
-    let device = getCookie('device')
+    let device = getCookie('device');
 
     if (device == null || device == undefined){
-      device = uuidv4()
+      device = uuidv4();
+      setCookie('device', device, 45); 
     }
 
-    document.cookie ='device=' + device + ";domain=;path=/"
+    // document.cookie ='device=' + device + ";domain=;path=/"
 
   </script>
 {% block css %}
