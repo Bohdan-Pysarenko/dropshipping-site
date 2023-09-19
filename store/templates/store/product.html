@@ -111,48 +111,202 @@
 					<p class="review-number">{{ reviews.count }}</p>  
 					<span> reviews</span>
 				</div>
-				<span>Sold Out</span>
-				<div class="price-box">
-					<span class="crossed-price">${{ product.crossed_out_price }}</span>
-					<span class="price">${{ product.price }}</span>
-					<span class="save">Save {{ product.calc_save }}%</span>
-				</div>
+
+				{% if product.available %}
+					<div class="price-box">
+						<span class="crossed-price">${{ product.crossed_out_price }}</span>
+						<span class="price">${{ product.price }}</span>
+						<span class="save">Save {{ product.calc_save }}%</span>
+					</div>
+				{% else %}
+					<span>Sold Out</span>
+					<div class="price-box">
+						<span class="crossed-price">${{ product.crossed_out_price }}</span>
+						<span class="price">${{ product.price }}</span>
+						<span class="save">Save {{ product.calc_save }}%</span>
+					</div>
+				{% endif %}
 
 				<div class="prospect">
+
+					{% for attribute, attribute_values in attribute_value_map.items %}
+						<div class="attribute-container">
+							<p>{{ attribute }}</p>
+							{% for attribute_value in attribute_values %}
+								<button class="attribute-button">{{ attribute_value }}</button>
+							{% endfor %}
+						</div>
+					{% endfor %}
+					<script>
+						function getCookie(name) {
+						    var cookieValue = null;
+						    if (document.cookie && document.cookie !== '') {
+						        var cookies = document.cookie.split(';');
+						        for (var i = 0; i < cookies.length; i++) {
+						            var cookie = cookies[i].trim();
+						            // Перевіряємо, чи починається цей cookie із потрібного нам імені
+						            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						                break;
+						            }
+						        }
+						    }
+						    return cookieValue;
+						}
+
+						function changePrice(){
+							var attributeList = []
+							var slug = window.location.pathname;
+							slug = slug.slice(1);
+							var csrfToken = getCookie('csrftoken');
+
+							attributeList.push(slug);
+
+							var activeButtons = document.querySelectorAll('.button-active');
+							activeButtons.forEach(function(activeButton) {
+								attributeList.push(activeButton.innerText);
+							});
+
+							fetch('/variant-price/', {
+								method: 'POST',
+								body: JSON.stringify(attributeList),
+								headers: {
+									'Content-Type': 'application/json',
+									'X-CSRFToken': csrfToken,
+								}
+							})
+							.then((response) => response.json())
+							.then((data) => {
+								console.log('Data: ', data);
+								if (data['modifier'] != null){
+									var priceSpan = document.querySelector('.price');
+									priceSpan.textContent = '$' + data['modifier'];
+								}
+								
+							})
+						}
+
+						var attributeContainers = document.querySelectorAll('.attribute-container');
+
+						attributeContainers.forEach(function(attributeContainer) {
+							var firstButton = attributeContainer.querySelector('button');
+							firstButton.classList.add('button-active');
+						});
+
+						changePrice();
+
+						var attributeButtons = document.querySelectorAll('.attribute-button');
+
+						attributeButtons.forEach(function(attributeButton) {
+							attributeButton.addEventListener('click', function() {
+								var container = attributeButton.parentElement;
+								var containerButtons = container.querySelectorAll('button');
+								containerButtons.forEach(function(containerButton) {
+									containerButton.classList.remove('button-active');
+								});
+
+								attributeButton.classList.add('button-active');
+								changePrice();
+							});
+						});
+
+					</script>
+
 					<p>Free Worldwide Shipping</p>
 					<p>Easy Returns & Exchanges</p>
 					<p>Fast, Friendly Support</p>
 					<p>In stock, ready to ship</p>
 					
-					{% for attribute, attribute_values in attribute_value_map.items %}
-						<p>{{ attribute }}</p>
-						{% for attribute_value in attribute_values %}
-							<button>{{ attribute_value }}</button>
-						{% endfor %}
-					{% endfor %}
+					
 
-					<!-- {% for pa in product_attributes %}
-					  <p>{{ pa.attribute.attribute.name }}: 
-					    {% for value in pa.attribute.productattribute_set.all %}
-					      <button>{{ value.get_attribute_value }}</button>
-					    {% endfor %}
-					  </p>
-					{% endfor %} -->
-
-					<!-- <h4>QUANTITY</h4>
-					<input type="number" value="1">
-
-					<div class="add-to-cart">
-						<button><a href="#">ADD TO CART</a></button>
-					</div> -->
 					{% if product.available %}
 						<div class="form-wrapper">
-							<form method="POST" action="{% url 'product' product.slug %}">
+							<form method="POST" id="add-to-cart" action="{% url 'product' product.slug %}">
 							{% csrf_token %}
-							<input min="1" value="1" type="number" name="quantity">
+							<label>QUANTITY</label>
+							<div class="qty">
+								<button class="qtyminus" aria-hidden="true">&minus;</button>
+								<input class="qtyinput" min="1" value="1" type="number" name="quantity">
+								<button class="qtyplus" aria-hidden="true">&plus;</button>
+							</div>
 							<input class="add-to-cart-button" type="submit" value="Add to Cart">
 							</form>
 					  	</div>
+					  	<script>
+					  		var input = document.querySelector('.qtyinput');
+							var btnminus = document.querySelector('.qtyminus');
+							var btnplus = document.querySelector('.qtyplus');
+
+							if (input !== undefined && btnminus !== undefined && btnplus !== undefined && input !== null && btnminus !== null && btnplus !== null) {
+	
+								var min = Number(input.getAttribute('min'));
+
+								function qtyminus(e) {
+									var current = Number(input.value);
+									var newval = (current - 1);
+									if(newval < min) {
+										newval = min;
+									}
+									input.value = Number(newval);
+									e.preventDefault();
+								}
+
+								function qtyplus(e) {
+									var current = Number(input.value);
+									var newval = (current + 1);
+									input.value = Number(newval);
+									e.preventDefault();
+								}
+									
+								btnminus.addEventListener('click', qtyminus);
+								btnplus.addEventListener('click', qtyplus);
+							  
+							} // End if test
+					  	</script>
+					  	<script>
+					  		var form = document.querySelector('#add-to-cart');
+					  		form.addEventListener('submit', (event) => {
+					  			event.preventDefault();
+
+					  			var variantTitle = '';
+
+					  			var activeButtons = document.querySelectorAll('.button-active');
+								activeButtons.forEach(function(activeButton) {
+									variantTitle += (' ' + activeButton.innerText); 
+								});
+
+								console.log(variantTitle);
+								var slug = '{{product.slug}}';
+								var variantPrice = document.querySelector('.price').textContent.slice(1);
+								var quantity = document.querySelector('input[name="quantity"]').value;
+								var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+								var data = [];
+
+								data.push(slug);
+								data.push(variantTitle);
+								data.push(variantPrice);
+								data.push(quantity);
+
+								fetch(form.action, {
+									method: form.method,
+									body: JSON.stringify(data),
+						  			headers: {
+						  				'Content-Type': 'application/json',
+						  				'X-CSRFToken': csrfToken,
+						  			}
+								})
+								.then(response => {
+									if (response.redirected) {
+										window.location.href = response.url
+									}
+								})
+								.catch(error => {
+									console.log(error);
+								});
+					  		});
+					  	</script>
+
 					{% endif %}
 				</div>
 				<div class="description">

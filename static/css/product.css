@@ -106,7 +106,7 @@
 }
 
 #container .prospect p {
-  font-size: 15px;
+  font-size: 17px;
   padding-bottom: 12px;
   letter-spacing: 1px;
 }
@@ -118,8 +118,73 @@
   letter-spacing: 1px;
 }
 
-#container .prospect input {
+.prospect input {
   margin-top: 8px;
+}
+
+.attribute-container {
+  margin-bottom: 12px;
+}
+
+.attribute-button {
+  color: black;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 8px 15px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.button-active {
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.qty {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.prospect input.qtyinput {
+  width: 5rem; height: 2rem;  
+  font-size: 1.1rem;
+  text-align: center;
+  border: 1px solid #575757;
+  margin-top: 0px;
+}
+button.qtyminus,
+button.qtyplus {
+  width: 2rem; height: 2rem;
+  color: #fff;
+  font-size: 1.5rem;
+  background: #575757;
+}
+
+
+.qtyminus {
+ padding: 0;
+  margin: 0;
+  border-style: none;
+  touch-action: manipulation;
+  display: inline-block;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.qtyplus {
+  padding: 0;
+  margin: 0;
+  border-style: none;
+  touch-action: manipulation;
+  display: inline-block;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 #container .add-to-cart {
@@ -148,7 +213,7 @@
 
 .description>p {
   margin: 16px 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .star {
@@ -171,18 +236,15 @@
 }
 
 .form-wrapper form {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+/*  display: flex;*/
+/*  flex-direction: row;*/
+/*  justify-content: space-between;*/
+/*  align-items: center;*/
 }
 
 .form-wrapper input[name="quantity"] {
-  width: 50px;
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
 }
 
 .form-wrapper .add-to-cart-button {

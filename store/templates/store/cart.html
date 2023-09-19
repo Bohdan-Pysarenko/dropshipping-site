@@ -6,6 +6,9 @@ Your Shopping Cart
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
 	<style>
+		#header {
+			background-image: none;
+		}
 		#navbar-container {
 			border-bottom: 1px solid #b5b2c8;
 		}
@@ -104,6 +107,14 @@ Your Shopping Cart
 
 		.cart-row h5 {
 		margin: 0;
+		font-size: 1rem;
+		line-height: 1.5;
+		letter-spacing: 1.1px;
+		}
+
+		.variant-placing {
+			font-size: 0.95rem;
+			font-weight: 500;
 		}
 	</style>
 		
@@ -122,10 +133,13 @@ Your Shopping Cart
 					<h2>QUANTITY</h2>
 					<h2>TOTAL</h2>
 				</div>
-				{% for item in order.orderitem_set.all %}
+				{% for item in orderItems %}
 					<div class="cart-row">
-						<img src="{{ item.product.imageURL }}">
-						<h5>{{ item.product.name }}</h5>
+						<img src="{{ item.product.first_image_url }}">
+						<div>
+							<h5>{{ item.product.name }}</h5>
+							<span class="variant-placing">{{ item.variant_title }}</span>
+						</div>
 						<h5>{{ item.quantity }}</h5>
 						<h5>{{ item.get_total }}</h5>
 					</div>

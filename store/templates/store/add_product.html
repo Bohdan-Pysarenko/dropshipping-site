@@ -95,6 +95,9 @@ Add Product
 	            {% endfor %}
 	        </select>
 
+	        <label>Pictures</label>
+	        <input type="file" name="images" required multiple>
+
 	        <label>Crossed price</label>
 	        <input type="number" name="crossed_out_price" placeholder="Enter crocced price" step="0.01" required>
 
@@ -115,8 +118,20 @@ Add Product
 			</div>
 			<button type="button" id="add-attribute">Add Attribute</button>
 
-	    	<label>Pictures</label>
-	        <input type="file" name="images" required multiple>
+			<table id="variantTable" style="display:none;">
+			  	<thead>
+			    	<tr>
+			    		<th>Select</th>
+			      		<th>Variant</th>
+			      		<th>Price</th>
+			    	</tr>
+			  	</thead>
+			  	<tbody id="variantsTbody">
+			    
+			  	</tbody>
+			</table>
+
+			<button type="button" id="createTable">Create table</button>
 
 	        <input type="submit" value="Send"/>
 		</form>
@@ -132,7 +147,8 @@ Add Product
 			      var newInput = document.createElement('input');
 			      newInput.type = 'text';
 			      newInput.name = newInputName;
-			      newInput.placeholder = 'Value ' + (form.querySelectorAll('input[name="${newInputName}"').length + 1);
+			      newInput.placeholder = 'Value ' + (form.querySelectorAll('input[name="' + newInputName).length + 1);
+			      // console.log(form.querySelectorAll('input[name="' + newInputName).length);
 
 			      input.parentNode.insertBefore(newInput, input.nextSibling);
 			      isNewFieldCreated = true;
@@ -152,6 +168,7 @@ Add Product
 			    createNewField(input);
 			});
 		  </script>
+
 		  <script>
 		  	var button = document.getElementById('add-attribute');
 		  	var form = document.getElementById('myForm');
@@ -183,8 +200,222 @@ Add Product
 			    createNewField(newInput, newInputName);
 		  	});
 		  </script>
+
+		  <script>
+		  	function count_input_values() {
+		  	
+			  	var inputs = form.querySelectorAll('input[name^="value"]');
+
+				// Створюємо порожній словник для зберігання кількості
+				var countDict = {};
+
+				// Перебираємо всі input елементи і підраховуємо їх кількість за іменем
+				inputs.forEach(function(input) {
+					if (input.value !== '') {
+					  	var name = input.getAttribute('name');
+
+					  	if (countDict[name]) {
+					    	countDict[name] += 1;
+					  	} else {
+					    	countDict[name] = 1;
+					  	}
+					}
+				});
+
+				// console.log(countDict);
+				return countDict;
+			}
+
+			function createRows(valueInputs, currentCombination) {
+				// valueInputs.forEach(function(valueInput) {
+  				// 	if (valueInput.value !== '') {
+	  					const newRow = variantTable.querySelector('tbody').insertRow();
+
+				  		const selectCell = newRow.insertCell(0);
+		    			const variantCell = newRow.insertCell(1);
+		    			const priceCell = newRow.insertCell(2);
+
+		    			const priceInput = document.createElement('input');
+		    			priceInput.type = 'number';
+						priceInput.name = 'variant-price';
+						priceInput.placeholder = 'Enter price';
+						priceInput.step = '0.01';
+						priceInput.required = true;
+
+						const selectInput = document.createElement('input');
+						selectInput.type = 'checkbox';
+						selectInput.name = 'selected';
+						selectInput.checked = true;
+
+						priceCell.appendChild(priceInput);
+						selectCell.appendChild(selectInput);
+						currentCombination.forEach(function(text) {
+							const pTag = document.createElement('input');
+							pTag.value = text;
+							pTag.disabled = true;
+							variantCell.appendChild(pTag);
+						});	
+				// 	}
+  				// });
+			}
+
+			function generateCombinations(l, keys, initialLength, valueInputs, currentCombination = []) {
+				
+			  	if (l.length === 0) {
+			    	// Базовий випадок: коли список порожній, виводимо поточну комбінацію
+
+			    	createRows(valueInputs, currentCombination)
+
+			  	} else {
+			    	// Рекурсивно генеруємо комбінації для решти списку
+			    	for (let i = 0; i < l[0]; i++) {
+			    		var num = initialLength - l.length;
+			    		var valueName = keys[num];
+
+			    		var valueResult = form.querySelectorAll("input[name='" + valueName + "']")[i].value;
+
+			      		generateCombinations(l.slice(1), keys, initialLength, valueInputs, [...currentCombination, valueResult]);
+			    	}
+			  	}
+			}
+
+		  	var variantTable = document.getElementById('variantTable');
+		  	var createTableButton = document.getElementById('createTable');
+
+		  	createTableButton.addEventListener('click', () => {
+		  		var tbody = document.getElementById('variantsTbody');
+		  		tbody.innerHTML = '';
+  				variantTable.style.display = 'block';
+  				var valueInputs = form.querySelectorAll('input[name^="value"]');
+  				var countInputsDict = count_input_values(); // {'value[]': 2, 'value1[]': 3}
+  				var keys = Object.keys(countInputsDict);
+
+  				// Convert to list
+  				const valuesList = Object.values(countInputsDict); // [2, 3]
+  				var initialLength = valuesList.length;
+  				generateCombinations(valuesList, keys, initialLength, valueInputs)
+
+			});
+
+		  </script>
+
+		  <script>
+		  	function gatherTableData(form, slug) {
+				console.log("gatherTableData: ", slug)
+		  		var tableData = [];
+
+		  		var attributes = form.querySelectorAll('input[name^="attribute[]"]');
+		  		var attributesList = [];
+
+		  		attributes.forEach(function(attribute) {
+		  			attributesList.push(attribute.value);
+		  			console.log('Attribute: ', attribute.value);
+		  		});
+
+		  		tableData.push(slug);
+		  		tableData.push(attributesList);
+
+		  		var rows = document.querySelectorAll('#variantTable tbody tr');
+
+		  		rows.forEach(function(row) {
+		  			var rowData = {};
+		  			if (row.querySelector('input[name="selected"]').checked) {
+		  				var variantsNamesList = [];
+		  				var variantsNames = row.querySelector('td:nth-child(2)').querySelectorAll('input');
+
+		  				variantsNames.forEach((variantsName) => {
+  							variantsNamesList.push(variantsName.value);
+						});
+
+		  				rowData.variant = variantsNamesList;
+		  				rowData.price = row.querySelector('input[name="variant-price"]').value;
+		  				tableData.push(rowData);
+		  			}
+		  			
+		  		});
+
+		  		return tableData;
+		  	}
+
+		  	function sendFormData() {
+				return new Promise((resolve, reject) => {
+					var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+					var formData = new FormData(document.getElementById('myForm'));
+
+					fetch('/upload-form-data/', {
+						method: 'POST',
+						body: formData,
+						headers: {
+							'X-CSRFToken': csrfToken,
+						},
+					})
+						.then((response) => response.json())
+						.then((data) => {
+							console.log('Return:', data);
+							resolve(data.slug); // Assuming 'slug' is a property in the response data
+						})
+						.catch((error) => {
+							console.error('Error:', error);
+							reject(error);
+						});
+				});
+			}
+
+		  	// Send data from the form to the server for adding new product to a database
+		  	function sendTableData(form, data) {
+		  		var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+		  		fetch(form.action, {
+		  			method: form.method,
+					body: JSON.stringify(data),
+		  			headers: {
+		  				'Content-Type': 'application/json',
+		  				'X-CSRFToken': csrfToken,
+		  			}
+		  		})
+		  		.then(response => {
+		  			// handing server's response
+		  		})
+		  		.catch(error => {
+		  			console.error('Error: ', error);
+		  		});
+		  	}
+
+		  	form.addEventListener('submit', (event) => {
+				event.preventDefault();
+
+				sendFormData()
+					.then((slug) => {
+						console.log('Slug:', slug);
+
+						var tableData = gatherTableData(form, slug);
+						sendTableData(form, tableData);
+						
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+			});
+
+		  </script>
 	</section>
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
