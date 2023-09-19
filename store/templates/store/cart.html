@@ -21,12 +21,71 @@ Your Shopping Cart
 		} 
 	</style>
 	<style>
+		.qty {
+		  display: flex;
+		  flex-wrap: wrap;
+		  justify-content: start;
+		  text-align: center;
+		  margin-top: 1rem;
+		}
+
+		input.qtyinput {
+		  width: 3rem; height: 1.5rem;  
+		  font-size: 1rem;
+		  text-align: center;
+		  border: 1px solid #575757;
+		  margin-top: 0px;
+		}
+		button.qtyminus,
+		button.qtyplus {
+		  width: 1.5rem; height: 1.5rem;
+		  color: #fff;
+		  font-size: 1.2rem;
+		  background: #575757;
+		  margin-top: 0px;
+		  padding: 0px;
+		}
+
+
+		.qtyminus {
+		 padding: 0;
+		  margin: 0;
+		  border-style: none;
+		  touch-action: manipulation;
+		  display: inline-block;
+		  border: none;
+		  background: none;
+		  cursor: pointer;
+		}
+
+		.qtyplus {
+		  padding: 0;
+		  margin: 0;
+		  border-style: none;
+		  touch-action: manipulation;
+		  display: inline-block;
+		  border: none;
+		  background: none;
+		  cursor: pointer;
+		}
+
+		.remove {
+			margin-top: 0.3rem;
+			font-size: 0.95rem;
+    		font-weight: 500;
+    		letter-spacing: 1px;
+    		cursor: pointer;
+		}
+
 		.summary-table {
-			max-width: 300px;
+			width: 400px;
 			padding: 20px;
 			border: 1px solid #ccc;
 			border-radius: 8px;
 			margin-left: auto;
+			position: sticky;
+			top: 30px;
+			background-color: #F7F7F7;
 		}
 		
 		.summary-table h2 {
@@ -76,29 +135,6 @@ Your Shopping Cart
 		}
 	</style>
 	<style>
-		.grid-container {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		grid-gap: 10px;
-		max-width: 800px;
-		margin: 0 auto;
-		}
-
-		.grid-header {
-		margin-top: 32px;
-		grid-column: 1 / -1;
-		display: grid;
-		grid-template-columns: 0.5fr 1.5fr 1fr 1fr;
-		gap: 10px;
-		font-weight: bold;
-		}
-
-		.cart-row {
-		display: grid;
-		grid-template-columns: 0.5fr 1.5fr 1fr 1fr;
-		gap: 10px;
-		align-items: center;
-		}
 
 		.cart-row img {
 		max-width: 100px;
@@ -110,6 +146,15 @@ Your Shopping Cart
 		font-size: 1rem;
 		line-height: 1.5;
 		letter-spacing: 1.1px;
+		display: flex;
+		align-items: center;
+		}
+
+		.cart-row-info {
+			width: 70%;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
 		}
 
 		.variant-placing {
@@ -121,47 +166,162 @@ Your Shopping Cart
 {% endblock css %}
 {% block content %}
 	<section class="section-cart">
+		<h1>Shopping Cart</h1>
 		{% if order != None %}
-			<div class="cart-container">
-				<h1>Shopping Cart</h1>
-				<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
-				<div class="grid-header">
-					<!-- div for grid align -->
-					<div></div> 
-					<div></div>
-					<!-- div for grid align -->
-					<h2>QUANTITY</h2>
-					<h2>TOTAL</h2>
-				</div>
-				{% for item in orderItems %}
-					<div class="cart-row">
-						<img src="{{ item.product.first_image_url }}">
-						<div>
-							<h5>{{ item.product.name }}</h5>
-							<span class="variant-placing">{{ item.variant_title }}</span>
+			<div class="cart">
+				<div class="cart-container">
+
+					{% for item in orderItems %}
+						<div class="cart-row">
+							<img src="{{ item.product.first_image_url }}">
+							<div class="cart-row-info">
+								<div>
+									<h5>{{ item.product.name }}</h5>
+									<span class="variant-placing">{{ item.variant_title }}</span>
+									<div class="qty">
+										<button class="qtyminus" aria-hidden="true">&minus;</button>
+										<input class="qtyinput" min="1" value="{{item.quantity}}" type="number" name="quantity">
+										<button class="qtyplus" aria-hidden="true">&plus;</button>
+									</div>
+									<p class="remove">Remove</p>
+								</div>
+								
+								<h5 class="cart-total">{{ item.get_total }}</h5>	
+							</div>
 						</div>
-						<h5>{{ item.quantity }}</h5>
-						<h5>{{ item.get_total }}</h5>
+					{% endfor %}
+				</div>
+				<div class="sticky-table">
+					<div class="summary-table">
+						<h2>Subtotal</h2>
+						{% if request.session.coupon_id %}
+							<p class="subtotal-price">{{ cart_total }}</p>
+						{% else %}
+							<p class="subtotal-price">{{ order.get_cart_total }}</p>
+						{% endif %}
+						<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
+						<form class="coupon" method="POST" action="{% url 'coupon' %}">
+							{% csrf_token %}
+							{{ form }}
+							<button type="submit">Apply Coupon</button>
+						</form>
 					</div>
-				{% endfor %}
-				<br>
+				</div>
 			</div>
-			<div class="summary-table">
-				<h2>Subtotal</h2>
-				{% if request.session.coupon_id %}
-					<p>{{ cart_total }}</p>
-				{% else %}
-					<p>{{ order.get_cart_total }}</p>
-				{% endif %}
-				<h3>Shipping</h3>
-				<p>Free!</p>
-				<button><a href="{% url 'checkout' %}">CHECK OUT</a></button>
-				<form class="coupon" method="POST" action="{% url 'coupon' %}">
-					{% csrf_token %}
-					{{ form }}
-					<button type="submit">Apply Coupon</button>
-				</form>
-			</div>
+			<script>
+				function update_quantity(index, currentQuantity) {
+					var orderId = '{{order.id}}';
+
+					var cartRowsInfo = document.querySelectorAll('.cart-row-info');
+					var cartRowInfo = cartRowsInfo[index];
+
+					var productName = cartRowInfo.querySelector('h5').textContent;
+					var productVariant = cartRowInfo.querySelector('span').textContent;
+
+					var data = [];
+					data.push(orderId);
+					data.push(productName);
+					data.push(productVariant);
+					data.push(currentQuantity);
+
+					var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+					fetch('/update-quantity/', {
+						method: 'POST',
+						body: JSON.stringify(data),
+		  				headers: {
+		  					'Content-Type': 'application/json',
+		  					'X-CSRFToken': csrfToken,
+		  				}	
+					})
+					.catch(error => {
+		  				console.error('Error: ', error);
+		  			});
+
+				}
+
+				var decreaseButtons = document.querySelectorAll('.qtyminus');
+				var increaseButtons = document.querySelectorAll('.qtyplus');
+				var quantityElements = document.querySelectorAll('.qtyinput');
+
+				decreaseButtons.forEach((button, index) => {
+					button.addEventListener('click', () => {
+						var currentQuantity = parseInt(quantityElements[index].value);
+
+						if (currentQuantity > 1) {
+							var cartTotals = document.querySelectorAll('.cart-total');
+							var price = parseFloat(cartTotals[index].textContent) / currentQuantity;
+							currentQuantity--;
+							quantityElements[index].value = currentQuantity;
+							update_quantity(index, currentQuantity);
+							
+							cartTotals[index].textContent = (Math.round(price * currentQuantity * 100) / 100).toFixed(2);
+
+							var subtotalPrice = document.querySelector('.subtotal-price');
+							var total = 0;
+							cartTotals.forEach(function(cartTotal) {
+								total += parseFloat(cartTotal.textContent);
+							});
+							subtotalPrice.textContent = (Math.round(total * 100) / 100).toFixed(2);
+						}
+					});
+				});
+
+				increaseButtons.forEach((button, index) => {
+					button.addEventListener('click', () => {
+						var currentQuantity = parseInt(quantityElements[index].value);
+						var cartTotals = document.querySelectorAll('.cart-total');
+						var price = parseFloat(cartTotals[index].textContent) / currentQuantity;
+						currentQuantity++;
+						quantityElements[index].value = currentQuantity;
+						update_quantity(index, currentQuantity);
+						
+						cartTotals[index].textContent = (Math.round(price * currentQuantity * 100) / 100).toFixed(2);
+
+						var subtotalPrice = document.querySelector('.subtotal-price');
+						var total = 0;
+						cartTotals.forEach(function(cartTotal) {
+							total += parseFloat(cartTotal.textContent);
+						});
+						subtotalPrice.textContent = (Math.round(total * 100) / 100).toFixed(2);
+					});
+				});
+
+				var removeButtons = document.querySelectorAll('.remove');
+				removeButtons.forEach((button, index) => {
+					button.addEventListener('click', () => {
+						var orderId = '{{order.id}}';
+
+						var cartRowsInfo = document.querySelectorAll('.cart-row-info');
+						var cartRowInfo = cartRowsInfo[index];
+
+						var productName = cartRowInfo.querySelector('h5').textContent;
+						var productVariant = cartRowInfo.querySelector('span').textContent;
+
+						var data = [];
+						data.push(orderId);
+						data.push(productName);
+						data.push(productVariant);
+
+						var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+						fetch('/remove-order-item/', {
+							method: 'POST',
+							body: JSON.stringify(data),
+			  				headers: {
+			  					'Content-Type': 'application/json',
+			  					'X-CSRFToken': csrfToken,
+			  				}	
+						})
+						.then(response => {
+							location.reload();
+						})
+						.catch(error => {
+			  				console.error('Error: ', error);
+			  			});
+					});
+				});
+			</script>
 		{% else %}
 			<h1 style="text-align:center;padding: 100px">No Items in cart</h1>
 		{% endif %}

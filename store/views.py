@@ -183,7 +183,6 @@ def add_product(request):
 	if request.user.is_staff:
 		if request.method == 'POST':
 			data = json.loads(request.body)
-			print(data)
 
 			slug = data[0]
 			product = Product.objects.get(slug=slug)
@@ -286,6 +285,30 @@ def variant_price(request):
 		response_data = {'modifier': modifier}
 
 		return JsonResponse(response_data)
+@require_POST
+def update_quantity(request):
+	data = json.loads(request.body) # [order_id, product_name, variants_name, new_quantity]
+
+	order = Order.objects.get(id=int(data[0]))
+	product = Product.objects.get(name=data[1])
+
+	order_item = OrderItem.objects.get(order=order, product=product, variant_title=data[2])
+	# print(order_item)
+	order_item.quantity = data[3]
+	order_item.save()
+
+	return JsonResponse({})
+
+@require_POST
+def remove_order_item(request):
+	data = json.loads(request.body) # [order_id, product_name, variants_name]
+
+	order = Order.objects.get(id=int(data[0]))
+	product = Product.objects.get(name=data[1])
+
+	order_item = OrderItem.objects.get(order=order, product=product, variant_title=data[2])
+	order_item.delete()
+	return JsonResponse({})
 
 def track_order(request):
 	return render(request, 'store/track_order.html')
